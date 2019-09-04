@@ -86,13 +86,13 @@ public class ScheduleService {
     /**
      * 每秒执行，打印日志
      */
-        @Async
-        @Scheduled(cron = "* * * * * *")
-        void test() {
-            logger.debug("异步任务的我被调度了，现在是:" + new Date());
-
-            //        throw new NullPointerException();
-
-        }
+//        @Async
+//        @Scheduled(cron = "* * * * * *")
+//        void test() {
+//            logger.debug("异步任务的我被调度了，现在是:" + new Date());
+//
+//            //        throw new NullPointerException();
+//
+//        }
 
 }

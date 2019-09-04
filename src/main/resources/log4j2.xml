@@ -78,6 +78,12 @@
 
         <!-- 单独指定日志级别，过滤掉spring和mybatis的一些无用的DEBUG信息。additivity定义是否只在自定义的Appender中进行输出-->
         <!--不配置输出源，忽略该日志-->
+        <Logger name="org.hibernate.validator" level="info"/>
+        <Logger name="org.apache.ibatis" level="info"/>
+        <Logger name="io.netty" level="info"/>
+        <Logger name="io.lettuce" level="info"/>
+
+
         <Logger name="druid.sql" level="info"/>
         <Logger name="org.springframework" level="info"/>
         <Logger name="org.mybatis" level="info"/>
