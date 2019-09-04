@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.CostMapper">
+    <resultMap id="BaseResultMap" type="com.barista.entity.Cost">
+        <constructor>
+            <idArg column="cost_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="cost_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="cost_base_duration" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="cost_base_cost" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+            <arg column="cost_unit_cost" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+            <arg column="cost_status" jdbcType="CHAR" javaType="java.lang.String"/>
+            <arg column="cost_descr" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="cost_creattime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="cost_starttime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="cost_type" jdbcType="CHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        cost_id, cost_name, cost_base_duration, cost_base_cost, cost_unit_cost, cost_status,
+    cost_descr, cost_creattime, cost_starttime, cost_type
+    </sql>
+    <select id="selectCount" resultType="int">
+        select count(*)
+        from cost
+    </select>
+
+    <select id="selectPaging" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cost order by cost_id
+        limit #{begin, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+    </select>
+
+    <select id="selectPagingOrder" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cost order by ${orderBy}
+        limit #{begin, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+    </select>
+    <!--<insert id="insert" parameterType="com.barista.entity.Cost" >-->
+    <!--insert into cost (cost_id, cost_name, cost_base_duration, -->
+    <!--cost_base_cost, cost_unit_cost, cost_status, -->
+    <!--cost_descr, cost_creattime, cost_starttime, -->
+    <!--cost_type)-->
+    <!--values (#{costId,jdbcType=INTEGER}, #{costName,jdbcType=VARCHAR}, #{costBaseDuration,jdbcType=INTEGER}, -->
+    <!--#{costBaseCost,jdbcType=DECIMAL}, #{costUnitCost,jdbcType=DECIMAL}, #{costStatus,jdbcType=CHAR}, -->
+    <!--#{costDescr,jdbcType=VARCHAR}, #{costCreattime,jdbcType=TIMESTAMP}, #{costStarttime,jdbcType=TIMESTAMP}, -->
+    <!--#{costType,jdbcType=CHAR})-->
+    <!--</insert>-->
+    <insert id="insertSelective" parameterType="com.barista.entity.Cost" keyProperty="cost_id"
+            useGeneratedKeys="true">
+        insert into cost
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="costId != null">
+                cost_id,
+            </if>
+            <if test="costName != null">
+                cost_name,
+            </if>
+            <if test="costBaseDuration != null">
+                cost_base_duration,
+            </if>
+            <if test="costBaseCost != null">
+                cost_base_cost,
+            </if>
+            <if test="costUnitCost != null">
+                cost_unit_cost,
+            </if>
+            <if test="true">
+                cost_status,
+            </if>
+            <if test="costDescr != null">
+                cost_descr,
+            </if>
+            <if test="true">
+                cost_creattime,
+            </if>
+            <if test="costType != null">
+                cost_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="costId != null">
+                #{costId,jdbcType=INTEGER},
+            </if>
+            <if test="costName != null">
+                #{costName,jdbcType=VARCHAR},
+            </if>
+            <if test="costBaseDuration != null">
+                #{costBaseDuration,jdbcType=INTEGER},
+            </if>
+            <if test="costBaseCost != null">
+                #{costBaseCost,jdbcType=DECIMAL},
+            </if>
+            <if test="costUnitCost != null">
+                #{costUnitCost,jdbcType=DECIMAL},
+            </if>
+            <if test="true">
+                "1",
+            </if>
+            <if test="costDescr != null">
+                #{costDescr,jdbcType=VARCHAR},
+            </if>
+            <if test="true">
+                now(),
+            </if>
+            <if test="costType != null">
+                #{costType,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="startUsing" parameterType="integer">
+        update cost
+        <set>
+            cost_status = "0",cost_starttime = now()
+        </set>
+        where cost_id = #{costId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from cost
+        where cost_id = #{costId,jdbcType=INTEGER}
+          and cost_status = "1"
+    </delete>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.Cost">
+        update cost
+        <set>
+            <if test="costName != null">
+                cost_name = #{costName,jdbcType=VARCHAR},
+            </if>
+            <if test="costBaseDuration != null">
+                cost_base_duration = #{costBaseDuration,jdbcType=INTEGER},
+            </if>
+            <if test="costBaseCost != null">
+                cost_base_cost = #{costBaseCost,jdbcType=DECIMAL},
+            </if>
+            <if test="costUnitCost != null">
+                cost_unit_cost = #{costUnitCost,jdbcType=DECIMAL},
+            </if>
+            <if test="costDescr != null">
+                cost_descr = #{costDescr,jdbcType=VARCHAR},
+            </if>
+            <if test="costType != null">
+                cost_type = #{costType,jdbcType=CHAR},
+            </if>
+        </set>
+        where cost_id = #{costId,jdbcType=INTEGER} and cost_status = "1"
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from cost
+        where cost_id = #{costId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByExistField" parameterType="Cost" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cost
+        <where>
+            <if test="costId != null">
+                cost_id = #{costId,jdbcType=INTEGER}
+            </if>
+            <if test="costName != null">
+                and cost_name = #{costName,jdbcType=VARCHAR}
+            </if>
+            <if test="costBaseDuration != null">
+                and cost_base_duration = #{costBaseDuration,jdbcType=INTEGER}
+            </if>
+            <if test="costBaseCost != null">
+                and cost_base_cost = #{costBaseCost,jdbcType=DECIMAL}
+            </if>
+            <if test="costUnitCost != null">
+                and cost_unit_cost = #{costUnitCost,jdbcType=DECIMAL}
+            </if>
+            <if test="costStatus != null">
+                and cost_status = #{costStatus,jdbcType=CHAR}
+            </if>
+            <if test="costDescr != null">
+                and cost_descr = #{costDescr,jdbcType=VARCHAR}
+            </if>
+            <if test="costCreattime != null">
+                 and cost_creattime = #{costCreattime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="costStarttime != null">
+                and cost_starttime = #{costStarttime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="costType != null">
+                and cost_type = #{costType,jdbcType=CHAR}
+            </if>
+        </where>
+    </select>
+    <!--<update id="updateByPrimaryKey" parameterType="com.barista.entity.Cost" >-->
+    <!--update cost-->
+    <!--set cost_name = #{costName,jdbcType=VARCHAR},-->
+    <!--cost_base_duration = #{costBaseDuration,jdbcType=INTEGER},-->
+    <!--cost_base_cost = #{costBaseCost,jdbcType=DECIMAL},-->
+    <!--cost_unit_cost = #{costUnitCost,jdbcType=DECIMAL},-->
+    <!--cost_status = #{costStatus,jdbcType=CHAR},-->
+    <!--cost_descr = #{costDescr,jdbcType=VARCHAR},-->
+    <!--cost_creattime = #{costCreattime,jdbcType=TIMESTAMP},-->
+    <!--cost_starttime = #{costStarttime,jdbcType=TIMESTAMP},-->
+    <!--cost_type = #{costType,jdbcType=CHAR}-->
+    <!--where cost_id = #{costId,jdbcType=INTEGER}-->
+    <!--</update>-->
+</mapper>

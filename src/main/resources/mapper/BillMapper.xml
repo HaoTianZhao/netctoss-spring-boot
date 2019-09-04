@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.BillMapper" >
+  <resultMap id="BaseResultMap" type="com.barista.entity.Bill" >
+    <constructor >
+      <idArg column="bill_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="bill_month" jdbcType="CHAR" javaType="java.lang.String" />
+      <arg column="cost" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="payment_mode" jdbcType="CHAR" javaType="java.lang.String" />
+      <arg column="pay_state" jdbcType="CHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bill_id, account_id, bill_month, cost, payment_mode, pay_state
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bill
+    where bill_id = #{billId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bill
+    where bill_id = #{billId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.barista.entity.Bill" >
+    insert into bill (bill_id, account_id, bill_month, 
+      cost, payment_mode, pay_state
+      )
+    values (#{billId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{billMonth,jdbcType=CHAR}, 
+      #{cost,jdbcType=DECIMAL}, #{paymentMode,jdbcType=CHAR}, #{payState,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.barista.entity.Bill" >
+    insert into bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="billId != null" >
+        bill_id,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="billMonth != null" >
+        bill_month,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="paymentMode != null" >
+        payment_mode,
+      </if>
+      <if test="payState != null" >
+        pay_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="billId != null" >
+        #{billId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="billMonth != null" >
+        #{billMonth,jdbcType=CHAR},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentMode != null" >
+        #{paymentMode,jdbcType=CHAR},
+      </if>
+      <if test="payState != null" >
+        #{payState,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.Bill" >
+    update bill
+    <set >
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="billMonth != null" >
+        bill_month = #{billMonth,jdbcType=CHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentMode != null" >
+        payment_mode = #{paymentMode,jdbcType=CHAR},
+      </if>
+      <if test="payState != null" >
+        pay_state = #{payState,jdbcType=CHAR},
+      </if>
+    </set>
+    where bill_id = #{billId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.barista.entity.Bill" >
+    update bill
+    set account_id = #{accountId,jdbcType=INTEGER},
+      bill_month = #{billMonth,jdbcType=CHAR},
+      cost = #{cost,jdbcType=DECIMAL},
+      payment_mode = #{paymentMode,jdbcType=CHAR},
+      pay_state = #{payState,jdbcType=CHAR}
+    where bill_id = #{billId,jdbcType=INTEGER}
+  </update>
+</mapper>

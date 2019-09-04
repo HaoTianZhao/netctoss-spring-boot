@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.BillItemMapper" >
+  <resultMap id="BaseResultMap" type="com.barista.entity.BillItem" >
+    <constructor >
+      <idArg column="item_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="bill_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="service_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="cost" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    item_id, bill_id, service_id, cost
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bill_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bill_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.barista.entity.BillItem" >
+    insert into bill_item (item_id, bill_id, service_id, 
+      cost)
+    values (#{itemId,jdbcType=INTEGER}, #{billId,jdbcType=INTEGER}, #{serviceId,jdbcType=INTEGER}, 
+      #{cost,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.barista.entity.BillItem" >
+    insert into bill_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="billId != null" >
+        bill_id,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="billId != null" >
+        #{billId,jdbcType=INTEGER},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.BillItem" >
+    update bill_item
+    <set >
+      <if test="billId != null" >
+        bill_id = #{billId,jdbcType=INTEGER},
+      </if>
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.barista.entity.BillItem" >
+    update bill_item
+    set bill_id = #{billId,jdbcType=INTEGER},
+      service_id = #{serviceId,jdbcType=INTEGER},
+      cost = #{cost,jdbcType=DECIMAL}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+</mapper>

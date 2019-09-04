@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.ServiceDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.barista.entity.ServiceDetail" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="service_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="unix_host" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="os_username" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="login_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="logout_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="duration" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="cost" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, service_id, unix_host, os_username, pid, login_time, logout_time, duration, cost
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from service_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from service_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.barista.entity.ServiceDetail" >
+    insert into service_detail (id, service_id, unix_host, 
+      os_username, pid, login_time, 
+      logout_time, duration, cost
+      )
+    values (#{id,jdbcType=INTEGER}, #{serviceId,jdbcType=INTEGER}, #{unixHost,jdbcType=VARCHAR}, 
+      #{osUsername,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{loginTime,jdbcType=TIMESTAMP}, 
+      #{logoutTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=DECIMAL}, #{cost,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.barista.entity.ServiceDetail" >
+    insert into service_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="unixHost != null" >
+        unix_host,
+      </if>
+      <if test="osUsername != null" >
+        os_username,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="loginTime != null" >
+        login_time,
+      </if>
+      <if test="logoutTime != null" >
+        logout_time,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=INTEGER},
+      </if>
+      <if test="unixHost != null" >
+        #{unixHost,jdbcType=VARCHAR},
+      </if>
+      <if test="osUsername != null" >
+        #{osUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logoutTime != null" >
+        #{logoutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.ServiceDetail" >
+    update service_detail
+    <set >
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=INTEGER},
+      </if>
+      <if test="unixHost != null" >
+        unix_host = #{unixHost,jdbcType=VARCHAR},
+      </if>
+      <if test="osUsername != null" >
+        os_username = #{osUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="loginTime != null" >
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logoutTime != null" >
+        logout_time = #{logoutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.barista.entity.ServiceDetail" >
+    update service_detail
+    set service_id = #{serviceId,jdbcType=INTEGER},
+      unix_host = #{unixHost,jdbcType=VARCHAR},
+      os_username = #{osUsername,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      login_time = #{loginTime,jdbcType=TIMESTAMP},
+      logout_time = #{logoutTime,jdbcType=TIMESTAMP},
+      duration = #{duration,jdbcType=DECIMAL},
+      cost = #{cost,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.RolePrivilegeMapper">
+    <resultMap id="BaseResultMap" type="com.barista.entity.RolePrivilege">
+        <constructor>
+            <idArg column="role_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <idArg column="privilege_group_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        </constructor>
+    </resultMap>
+    <select id="selectPrivilegeGroupNames" resultType="map" parameterType="list">
+        select DISTINCT rp.role_id, p.privilege_group_name
+        from role_privilege rp join privilege p
+        on rp.role_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item, jdbcType=INTEGER}
+        </foreach>
+        and rp.privilege_group_id = p.privilege_group_id order by rp.role_id;
+    </select>
+    <insert id="insertRolePrivileges" parameterType="map">
+        insert into role_privilege (role_id, privilege_group_id)
+        values
+        <foreach collection="privilegeGroupIds" item="item" separator=",">
+            (#{role.roleId,jdbcType=INTEGER}, #{item,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <delete id="deleteByRoleId" parameterType="integer">
+        delete
+        from role_privilege
+        where role_id = #{roleId,jdbcType=INTEGER};
+    </delete>
+
+    <!--  <insertRolePrivileges id="insertSelective" parameterType="com.barista.entity.RolePrivilege" >
+        insertRolePrivileges into role_privilege
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+          <if test="roleId != null" >
+            role_id,
+          </if>
+          <if test="privilegeGroupId != null" >
+            privilege_group_id,
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+          <if test="roleId != null" >
+            #{roleId,jdbcType=INTEGER},
+          </if>
+          <if test="privilegeGroupId != null" >
+            #{privilegeGroupId,jdbcType=INTEGER},
+          </if>
+        </trim>
+      </insertRolePrivileges>-->
+
+</mapper>

@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <div id="save_result_info" class="save_fail">保存失败，资费名称重复！</div>
+        <form id="cost_add" action="" method="" class="main_form">
+            <div class="text_info clearfix"><span>资费名称：</span></div>
+            <div class="input_info">
+                <input id="costName" name="costName" type="text" class="width300" value="" />
+                <span class="required">*</span>
+                <div class="validate_msg_short">50长度的字母、数字、汉字和下划线的组合</div>
+            </div>
+            <div class="text_info clearfix"><span>资费类型：</span></div>
+            <div class="input_info fee_type">
+                <input type="radio" name="costType" value="1" id="monthly" onclick="feeTypeChange(1);" />
+                <label for="monthly">包月</label>
+                <input type="radio"  name="costType" value="2" checked="checked" id="package" onclick="feeTypeChange(2);" />
+                <label for="package">套餐</label>
+                <input type="radio" name="costType" value="3" id="timeBased" onclick="feeTypeChange(3);" />
+                <label for="timeBased">计时</label>
+            </div>
+            <div class="text_info clearfix"><span>基本时长：</span></div>
+            <div class="input_info">
+                <input id="costBaseDuration" name="costBaseDuration" type="text" value="" class="width100" />
+                <span class="info">小时</span>
+                <span class="required">*</span>
+                <div class="validate_msg_long">1-600之间的整数</div>
+            </div>
+            <div class="text_info clearfix"><span>基本费用：</span></div>
+            <div class="input_info">
+                <input id="costBaseCost" name="costBaseCost" type="text" value="" class="width100" />
+                <span class="info">元</span>
+                <span class="required">*</span>
+                <div class="validate_msg_long error_msg">0-99999.99之间的数值</div>
+            </div>
+            <div class="text_info clearfix"><span>单位费用：</span></div>
+            <div class="input_info">
+                <input id="costUnitCost" name="costUnitCost" type="text" value="" class="width100" />
+                <span class="info">元/小时</span>
+                <span class="required">*</span>
+                <div class="validate_msg_long error_msg">0-99999.99之间的数值</div>
+            </div>
+            <div class="text_info clearfix"><span>资费说明：</span></div>
+            <div class="input_info_high">
+                <textarea id="costDescr" name="costDescr" class="width300 height70"></textarea>
+                <div class="validate_msg_short error_msg">100长度的字母、数字、汉字和下划线的组合</div>
+            </div>
+            <div class="button_info clearfix">
+                <input id="submit" type="button" value="保存" class="btn_save" />
+                <input type="button" value="取消" class="btn_save" onclick="location.href='fee_list.html';" />
+            </div>
+        </form>
+    </div>
+</body>
+
+<script language="javascript" type="text/javascript">
+    $(function () {
+        // $('#costId').val(sessionStorage.getItem("modiCostId"));
+        // $('#costName').val(sessionStorage.getItem("modiCostName"));
+        
+        // $('#costBaseDuration').val(sessionStorage.getItem("modiCostBaseDuration").replace("小时",""));
+        // $('#costBaseCost').val(sessionStorage.getItem("modiCostBaseCost").replace("元",""));
+        // $('#costUnitCost').val(sessionStorage.getItem("modiCostUnitCost").replace("元/小时",""));
+
+        // if (sessionStorage.getItem("modiCostType") == 1){
+        //     $('#monthly').click();
+        // }
+        // else if (sessionStorage.getItem("modiCostType") == 2)
+        //     $('#package').click();
+        // else
+        //     $('#timeBased').click();
+
+        // $('#costDescr').val(sessionStorage.getItem("modiCostDescr"));
+    });
+
+    $("#submit").click(function () {
+        global_post("/cost/add",
+            $('#cost_add').serialize(),
+            function (result) {
+                if (result.code == 200) {
+                    gloal_save_result(true, "保存成功！")
+                } else if (result.code == 120) {
+                    gloal_save_result(false, "保存失败，资费名已被使用！");
+                } else if (result.code == 500) {
+                    gloal_save_result(false, "保存失败，数据并发错误！");
+                }
+            });
+    });
+ 
+    //切换资费类型
+    function feeTypeChange(type) {
+        var inputArray = document.getElementById("main").getElementsByTagName("input");
+        if (type == 1) {
+            inputArray[4].readonly = true;
+            inputArray[4].value = "";
+            inputArray[4].className += " readonly";
+            inputArray[5].readonly = false;
+            inputArray[5].className = "width100";
+            inputArray[6].readonly = true;
+            inputArray[6].className += " readonly";
+            inputArray[6].value = "";
+        }
+        else if (type == 2) {
+            inputArray[4].readonly = false;
+            inputArray[4].className = "width100";
+            inputArray[5].readonly = false;
+            inputArray[5].className = "width100";
+            inputArray[6].readonly = false;
+            inputArray[6].className = "width100";
+        }
+        else if (type == 3) {
+            inputArray[4].readonly = true;
+            inputArray[4].value = "";
+            inputArray[4].className += " readonly";
+            inputArray[5].readonly = true;
+            inputArray[5].value = "";
+            inputArray[5].className += " readonly";
+            inputArray[6].readonly = false;
+            inputArray[6].className = "width100";
+        }
+    }
+</script>
+
+</html>

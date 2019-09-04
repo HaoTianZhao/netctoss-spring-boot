@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.ServiceMapper">
+    <resultMap id="BaseResultMap" type="com.barista.entity.Service">
+        <constructor>
+            <idArg column="service_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="unix_host" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="os_username" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="login_passwd" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="service_status" jdbcType="CHAR" javaType="java.lang.String"/>
+            <arg column="service_create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="service_pause_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="service_close_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="cost_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        service_id, account_id, unix_host, os_username, login_passwd, service_status, service_create_date,
+    service_pause_date, service_close_date, cost_id
+    </sql>
+
+    <sql id="Multi_Column_List">
+        s.service_id, s.account_id, s.unix_host, s.os_username, s.login_passwd, s.service_status, s.service_create_date,
+    service_pause_date, s.service_close_date, s.cost_id
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from service
+        where service_id = #{serviceId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByExistField" parameterType="com.barista.entity.Service"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service
+        <where>
+            <if test="serviceId != null">
+                service_id = #{serviceId,jdbcType=INTEGER}
+            </if>
+            <if test="accountId != null">
+                and account_id = #{accountId,jdbcType=INTEGER}
+            </if>
+            <if test="unixHost != null">
+                and unix_host = #{unixHost,jdbcType=VARCHAR}
+            </if>
+            <if test="osUsername != null">
+                and os_username = #{osUsername,jdbcType=VARCHAR}
+            </if>
+            <if test="loginPasswd != null">
+                and login_passwd = #{loginPasswd,jdbcType=VARCHAR}
+            </if>
+            <if test="serviceStatus != null">
+                and service_status = #{serviceStatus,jdbcType=CHAR}
+            </if>
+            <if test="serviceCreateDate != null">
+                and service_create_date = #{serviceCreateDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="servicePauseDate != null">
+                and service_pause_date = #{servicePauseDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="serviceCloseDate != null">
+                and service_close_date = #{serviceCloseDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="costId != null">
+                and cost_id = #{costId,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(*)
+        from service
+    </select>
+
+    <select id="selectPaging" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service order by service_id limit
+        #{begin,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectCountFilter" parameterType="map" resultType="int">
+        select
+        count(*)
+        from service s join account a on s.account_id = a.account_id
+        <where>
+            <if test="osUsername!=null">
+                s.os_username like concat('%',concat(#{osUsername,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="unixHost!=null">
+                and s.unix_host like concat('%',concat(#{unixHost,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="accountIdcardNo!=null">
+                and a.account_idcard_no like
+                concat('%',concat(#{accountIdcardNo,jdbcType=CHAR},'%'))
+            </if>
+            <if test="serviceStatus!=null">
+                and s.service_status like concat('%',concat(#{serviceStatus,jdbcType=CHAR},'%'))
+            </if>
+        </where>
+        order by s.service_id
+    </select>
+
+    <select id="selectPagingFilter" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Multi_Column_List"/>
+        from service s join account a on s.account_id = a.account_id
+        <where>
+            <if test="osUsername!=null">
+                s.os_username like concat('%',concat(#{osUsername,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="unixHost!=null">
+                and s.unix_host like concat('%',concat(#{unixHost,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="accountIdcardNo!=null">
+                and a.account_idcard_no like
+                concat('%',concat(#{accountIdcardNo,jdbcType=CHAR},'%'))
+            </if>
+            <if test="serviceStatus!=null">
+                and s.service_status like concat('%',concat(#{serviceStatus,jdbcType=CHAR},'%'))
+            </if>
+        </where>
+        order by s.service_id limit #{begin,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+
+    <!--<insert id="insert" parameterType="com.barista.entity.Service" >-->
+    <!--insert into service (service_id, account_id, unix_host, -->
+    <!--os_username, login_passwd, service_status, -->
+    <!--service_create_date, service_pause_date, -->
+    <!--service_close_date, cost_id)-->
+    <!--values (#{serviceId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{unixHost,jdbcType=VARCHAR}, -->
+    <!--#{osUsername,jdbcType=VARCHAR}, #{loginPasswd,jdbcType=VARCHAR}, #{serviceStatus,jdbcType=CHAR}, -->
+    <!--#{serviceCreateDate,jdbcType=TIMESTAMP}, #{servicePauseDate,jdbcType=TIMESTAMP}, -->
+    <!--#{serviceCloseDate,jdbcType=TIMESTAMP}, #{costId,jdbcType=INTEGER})-->
+    <!--</insert>-->
+    <insert id="insertSelective" parameterType="com.barista.entity.Service" keyProperty="service_id"
+            useGeneratedKeys="true">
+        insert into service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <!--            <if test="serviceId != null">
+                            service_id,
+                        </if>-->
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="unixHost != null">
+                unix_host,
+            </if>
+            <if test="osUsername != null">
+                os_username,
+            </if>
+            <if test="loginPasswd != null">
+                login_passwd,
+            </if>
+            service_status,
+            service_create_date,
+
+            <!--            <if test="servicePauseDate != null">
+                            service_pause_date,
+                        </if>
+                        <if test="serviceCloseDate != null">
+                            service_close_date,
+                        </if>-->
+            <if test="costId != null">
+                cost_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <!--            <if test="serviceId != null">
+                            #{serviceId,jdbcType=INTEGER},
+                        </if>-->
+            <if test="accountId != null">
+                #{accountId,jdbcType=INTEGER},
+            </if>
+            <if test="unixHost != null">
+                #{unixHost,jdbcType=VARCHAR},
+            </if>
+            <if test="osUsername != null">
+                #{osUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPasswd != null">
+                #{loginPasswd,jdbcType=VARCHAR},
+            </if>
+            '0',
+            now(),
+            <!--            <if test="servicePauseDate != null">
+                            #{servicePauseDate,jdbcType=TIMESTAMP},
+                        </if>
+                        <if test="serviceCloseDate != null">
+                            #{serviceCloseDate,jdbcType=TIMESTAMP},
+                        </if>-->
+            <if test="costId != null">
+                #{costId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="startUsing" parameterType="integer">
+        update service
+        set service_status     = '0',
+            service_pause_date = null
+        where service_id = #{serviceId,jdbcType=INTEGER}
+          and service_status = '1'
+    </update>
+
+    <update id="pauseUsing" parameterType="integer">
+        update service
+        set service_status     = '1',
+            service_pause_date = now()
+        where service_id = #{serviceId,jdbcType=INTEGER}
+          and service_status = '0'
+    </update>
+
+    <update id="pauseAllByAccountId" parameterType="integer">
+        update service
+        set service_status     = '1',
+            service_pause_date = now()
+        where account_id = #{accountId,jdbcType=INTEGER}
+          and service_status = '0'
+    </update>
+
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        update service
+        set service_status     = '2',
+            service_close_date = now()
+        where service_id = #{serviceId,jdbcType=INTEGER}
+    </update>
+
+    <update id="deleteByAccountId" parameterType="java.lang.Integer">
+        update service
+        set service_status     = '2',
+            service_close_date = now()
+        where account_id = #{accountId,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateAllById" parameterType="list">
+        update service
+        set cost_id = case service_id
+        <foreach collection="list" item="item">
+            when #{item.serviceId, jdbcType=INTEGER} then #{item.costId,jdbcType=INTEGER}
+        </foreach>
+        end
+        where service_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.serviceId,jdbcType=INTEGER}
+        </foreach>
+        and service_status != '2'
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.Service">
+        update service
+        <set>
+            <if test="accountId != null">
+                account_id = #{accountId,jdbcType=INTEGER},
+            </if>
+            <if test="unixHost != null">
+                unix_host = #{unixHost,jdbcType=VARCHAR},
+            </if>
+            <if test="osUsername != null">
+                os_username = #{osUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPasswd != null">
+                login_passwd = #{loginPasswd,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceStatus != null">
+                service_status = #{serviceStatus,jdbcType=CHAR},
+            </if>
+            <if test="serviceCreateDate != null">
+                service_create_date = #{serviceCreateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="servicePauseDate != null">
+                service_pause_date = #{servicePauseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="serviceCloseDate != null">
+                service_close_date = #{serviceCloseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="costId != null">
+                cost_id = #{costId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where service_id = #{serviceId,jdbcType=INTEGER} and service_status != '2'
+    </update>
+    <!--<update id="updateByPrimaryKey" parameterType="com.barista.entity.Service" >-->
+    <!--update service-->
+    <!--set account_id = #{accountId,jdbcType=INTEGER},-->
+    <!--unix_host = #{unixHost,jdbcType=VARCHAR},-->
+    <!--os_username = #{osUsername,jdbcType=VARCHAR},-->
+    <!--login_passwd = #{loginPasswd,jdbcType=VARCHAR},-->
+    <!--service_status = #{serviceStatus,jdbcType=CHAR},-->
+    <!--service_create_date = #{serviceCreateDate,jdbcType=TIMESTAMP},-->
+    <!--service_pause_date = #{servicePauseDate,jdbcType=TIMESTAMP},-->
+    <!--service_close_date = #{serviceCloseDate,jdbcType=TIMESTAMP},-->
+    <!--cost_id = #{costId,jdbcType=INTEGER}-->
+    <!--where service_id = #{serviceId,jdbcType=INTEGER}-->
+    <!--</update>-->
+</mapper>

@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+    <script type="text/javascript" src="/page/js/pagination.js"></script>
+    <script type="text/javascript" src="/page/js/role_list_init.js"></script>
+
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <form action="" method="">
+            <!--查询-->
+            <div class="search_add">
+                <input type="button" value="增加" class="btn_add" onclick="location.href='role_add.html';" />
+            </div>
+            <!--删除的操作提示-->
+            <div id="operate_result_info" class="operate_success">
+                <img src="../images/close.png" onclick="this.parentNode.style.display='none';" />
+                <p></p>
+                <!--删除成功！-->
+                <!--删除错误！该角色被使用，不能删除。-->
+            </div>
+            <!--数据区域：用表格展示数据-->
+            <div id="data">
+                <table id="datalist">
+                </table>
+            </div>
+            <!--分页-->
+            <div id="pages">
+            </div>
+        </form>
+    </div>
+</body>
+
+<script language="javascript" type="text/javascript">
+    $(function () {
+        //分页
+        // $('#pages').pagination('/role/getPageInfo', 1, 10, 0);
+        global_post("/role/getPageInfo", { 'currentPage': 1, 'nextPage': true, 'pageSize': 10 },
+            function (result) {
+                if (result.code == 200) {
+                    $('#datalist').initRoleList(result.data);
+                    $('#pages').pagination('/role/getPageInfo', $('#datalist').initRoleList, 1, 10, result.data.totalCount);
+                } else if (result.code == 500) {
+                    global_operate_result(false, "服务器故障，无法查看角色信息。");
+                }
+            });
+    });
+</script>
+
+</html>

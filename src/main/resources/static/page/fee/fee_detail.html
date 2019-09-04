@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <form action="" method="" class="main_form">
+            <div class="text_info clearfix"><span>资费ID：</span></div>
+            <div class="input_info"><input id="costId" type="text" class="readonly" readonly value="" /></div>
+            <div class="text_info clearfix"><span>资费名称：</span></div>
+            <div class="input_info"><input id="costName" type="text" class="readonly" readonly value="包 20 小时" /></div>
+            <div class="text_info clearfix"><span>资费状态：</span></div>
+            <div class="input_info">
+                <select id="costStatus" class="readonly" disabled>
+                    <option value="开通">开通</option>
+                    <option value="暂停">暂停</option>
+                    <option value="删除">删除</option>
+                </select>
+            </div>
+            <div class="text_info clearfix"><span>资费类型：</span></div>
+            <div class="input_info fee_type">
+                <input type="radio" name="radFeeType" id="monthly" disabled="disabled" />
+                <label for="monthly">包月</label>
+                <input type="radio" name="radFeeType" id="package" disabled="disabled" />
+                <label for="package">套餐</label>
+                <input type="radio" name="radFeeType" id="timeBased" disabled="disabled" />
+                <label for="timeBased">计时</label>
+            </div>
+            <div class="text_info clearfix"><span>基本时长：</span></div>
+            <div class="input_info">
+                <input id="costBaseDuration" type="text" class="readonly" readonly value="" />
+                <span></span>
+            </div>
+            <div class="text_info clearfix"><span>基本费用：</span></div>
+            <div class="input_info">
+                <input id="costBaseCost" type="text" class="readonly" readonly value="24.5" />
+                <span></span>
+            </div>
+            <div class="text_info clearfix"><span>单位费用：</span></div>
+            <div class="input_info">
+                <input id="costUnitCost" type="text" class="readonly" readonly value="3.00" />
+                <span></span>
+            </div>
+            <div class="text_info clearfix"><span>创建时间：</span></div>
+            <div class="input_info"><input id="costCreattime" type="text" class="readonly" readonly
+                    value="2013/1/1 00:00:00" /></div>
+            <div class="text_info clearfix"><span>启动时间：</span></div>
+            <div class="input_info"><input id="costStarttime" type="text" class="readonly" readonly
+                    value="2013/1/1 00:00:00" /></div>
+            <div class="text_info clearfix"><span>资费说明：</span></div>
+            <div class="input_info_high">
+                <textarea id="costDescr" class="width300 height70 readonly" readonly></textarea>
+            </div>
+            <div class="button_info clearfix">
+                <input type="button" value="返回" class="btn_save" onclick="location.href='fee_list.html';" />
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+    $(function () {
+        $('#costId').val(sessionStorage.getItem("modiCostId"));
+        $('#costName').val(sessionStorage.getItem("modiCostName"));
+        $('#costStatus').val(sessionStorage.getItem("modiCostStatus"));
+
+        if (sessionStorage.getItem("modiCostType") == 1)
+            $('#monthly').attr("checked", true);
+        else if (sessionStorage.getItem("modiCostType") == 2)
+            $('#package').attr("checked", true);
+        else
+            $('#timeBased').attr("checked", true);
+
+        $('#costBaseDuration').val(sessionStorage.getItem("modiCostBaseDuration"));
+        $('#costBaseCost').val(sessionStorage.getItem("modiCostBaseCost"));
+        $('#costUnitCost').val(sessionStorage.getItem("modiCostUnitCost"));
+
+        $('#costCreattime').val(sessionStorage.getItem("modiCostCreattime"));
+        $('#costStarttime').val(sessionStorage.getItem("modiCostStarttime"));
+        $('#costDescr').val(sessionStorage.getItem("modiCostDescr"));
+    })
+</script>
+
+</html>

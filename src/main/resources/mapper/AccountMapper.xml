@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.AccountMapper">
+    <resultMap id="BaseResultMap" type="com.barista.entity.Account">
+        <constructor>
+            <idArg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="account_recommender_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="account_login_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_login_passwd" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_status" jdbcType="CHAR" javaType="java.lang.String"/>
+            <arg column="account_create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="account_pause_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="account_close_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="account_real_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_idcard_no" jdbcType="CHAR" javaType="java.lang.String"/>
+            <arg column="account_birthdate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="account_gender" jdbcType="CHAR" javaType="java.lang.String"/>
+            <arg column="account_occupation" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_telephone" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_email" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_mail_address" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_zipcode" jdbcType="CHAR" javaType="java.lang.String"/>
+            <arg column="account_qq" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="account_last_login_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="account_last_login_ip" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        account_id, account_recommender_id, account_login_name, account_login_passwd, account_status,
+    account_create_date, account_pause_date, account_close_date, account_real_name, account_idcard_no, 
+    account_birthdate, account_gender, account_occupation, account_telephone, account_email, 
+    account_mail_address, account_zipcode, account_qq, account_last_login_time, account_last_login_ip
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from account
+        where account_id = #{accountId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByIdcardNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from account
+        where account_idcard_no = #{accountRecommenderIdcardNo,jdbcType=CHAR}
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(*)
+        from account;
+    </select>
+
+    <select id="selectPaging" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from account
+        order by account_id limit #{begin, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+    </select>
+
+    <select id="selectCountFilter" parameterType="map" resultType="int">
+        select count(*) from account
+        <where>
+            <trim suffixOverrides="and">
+                <if test="accountIdcardNo != null">
+                    account_idcard_no like CONCAT('%', CONCAT(#{accountIdcardNo, jdbcType=CHAR}, '%')) and
+                </if>
+                <if test="accountRealName != null">
+                    account_real_name like CONCAT('%', CONCAT(#{accountRealName, jdbcType=VARCHAR}, '%')) and
+                </if>
+                <if test="accountLoginName != null">
+                    account_login_name like CONCAT('%', CONCAT(#{accountLoginName, jdbcType=VARCHAR}, '%')) and
+                </if>
+                <if test="accountStatus != null">
+                    account_status = #{accountStatus, jdbcType=CHAR} and
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectPagingFilter" resultType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from account
+        <where>
+            <trim suffixOverrides="and">
+                <if test="accountIdcardNo != null">
+                    account_idcard_no like CONCAT('%', CONCAT(#{accountIdcardNo, jdbcType=CHAR}, '%')) and
+                </if>
+                <if test="accountRealName != null">
+                    account_real_name like CONCAT('%', CONCAT(#{accountRealName, jdbcType=VARCHAR}, '%')) and
+                </if>
+                <if test="accountLoginName != null">
+                    account_login_name like CONCAT('%', CONCAT(#{accountLoginName, jdbcType=VARCHAR}, '%')) and
+                </if>
+                <if test="accountStatus != null">
+                    account_status = #{accountStatus, jdbcType=CHAR} and
+                </if>
+            </trim>
+        </where>
+        order by account_id limit #{begin, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.barista.entity.Account" keyProperty="account_id"
+            useGeneratedKeys="true">
+        insert into account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="accountRecommenderId != null">
+                account_recommender_id,
+            </if>
+            <if test="accountLoginName != null">
+                account_login_name,
+            </if>
+            <if test="accountLoginPasswd != null">
+                account_login_passwd,
+            </if>
+            account_status,
+            account_create_date,
+            <if test="accountPauseDate != null">
+                account_pause_date,
+            </if>
+            <if test="accountCloseDate != null">
+                account_close_date,
+            </if>
+            <if test="accountRealName != null">
+                account_real_name,
+            </if>
+            <if test="accountIdcardNo != null">
+                account_idcard_no,
+            </if>
+            <if test="accountBirthdate != null">
+                account_birthdate,
+            </if>
+            <if test="accountGender != null">
+                account_gender,
+            </if>
+            <if test="accountOccupation != null">
+                account_occupation,
+            </if>
+            <if test="accountTelephone != null">
+                account_telephone,
+            </if>
+            <if test="accountEmail != null">
+                account_email,
+            </if>
+            <if test="accountMailAddress != null">
+                account_mail_address,
+            </if>
+            <if test="accountZipcode != null">
+                account_zipcode,
+            </if>
+            <if test="accountQq != null">
+                account_qq,
+            </if>
+            <if test="accountLastLoginTime != null">
+                account_last_login_time,
+            </if>
+            <if test="accountLastLoginIp != null">
+                account_last_login_ip,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">
+                #{accountId,jdbcType=INTEGER},
+            </if>
+            <if test="accountRecommenderId != null">
+                #{accountRecommenderId,jdbcType=INTEGER},
+            </if>
+            <if test="accountLoginName != null">
+                #{accountLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountLoginPasswd != null">
+                #{accountLoginPasswd,jdbcType=VARCHAR},
+            </if>
+            '0',
+            now(),
+            <if test="accountPauseDate != null">
+                #{accountPauseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountCloseDate != null">
+                #{accountCloseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountRealName != null">
+                #{accountRealName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountIdcardNo != null">
+                #{accountIdcardNo,jdbcType=CHAR},
+            </if>
+            <if test="accountBirthdate != null">
+                #{accountBirthdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountGender != null">
+                #{accountGender,jdbcType=CHAR},
+            </if>
+            <if test="accountOccupation != null">
+                #{accountOccupation,jdbcType=VARCHAR},
+            </if>
+            <if test="accountTelephone != null">
+                #{accountTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="accountEmail != null">
+                #{accountEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="accountMailAddress != null">
+                #{accountMailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="accountZipcode != null">
+                #{accountZipcode,jdbcType=CHAR},
+            </if>
+            <if test="accountQq != null">
+                #{accountQq,jdbcType=VARCHAR},
+            </if>
+            <if test="accountLastLoginTime != null">
+                #{accountLastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountLastLoginIp != null">
+                #{accountLastLoginIp,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+<!--饿了么：6 *9.7 + 12.5 -30 =40.7 (35)-->
+<!--美团：  6 *9.3 + 15 -30 =40.8 /6=6.8 (36)-->
+
+    <update id="startUsing" parameterType="integer">
+        update account
+        set account_status      = '0',
+            account_pause_date  = null
+        where account_id = #{accountId,jdbcType=INTEGER}
+          and account_status = '1';
+    </update>
+
+    <update id="pauseUsing" parameterType="integer">
+        update account
+        set account_status     = '1',
+            account_pause_date = now()
+        where account_id = #{accountId,jdbcType=INTEGER}
+          and account_status = '0';
+    </update>
+
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        update account
+        set account_status     = '2',
+            account_close_date = now()
+        where account_id = #{accountId,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.Account">
+        update account
+        <set>
+            <if test="accountRecommenderId != null">
+                account_recommender_id = #{accountRecommenderId,jdbcType=INTEGER},
+            </if>
+            <if test="accountLoginName != null">
+                account_login_name = #{accountLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountLoginPasswd != null">
+                account_login_passwd = #{accountLoginPasswd,jdbcType=VARCHAR},
+            </if>
+            <if test="accountStatus != null">
+                account_status = #{accountStatus,jdbcType=CHAR},
+            </if>
+            <if test="accountCreateDate != null">
+                account_create_date = #{accountCreateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountPauseDate != null">
+                account_pause_date = #{accountPauseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountCloseDate != null">
+                account_close_date = #{accountCloseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountRealName != null">
+                account_real_name = #{accountRealName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountIdcardNo != null">
+                account_idcard_no = #{accountIdcardNo,jdbcType=CHAR},
+            </if>
+            <if test="accountBirthdate != null">
+                account_birthdate = #{accountBirthdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountGender != null">
+                account_gender = #{accountGender,jdbcType=CHAR},
+            </if>
+            <if test="accountOccupation != null">
+                account_occupation = #{accountOccupation,jdbcType=VARCHAR},
+            </if>
+            <if test="accountTelephone != null">
+                account_telephone = #{accountTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="accountEmail != null">
+                account_email = #{accountEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="accountMailAddress != null">
+                account_mail_address = #{accountMailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="accountZipcode != null">
+                account_zipcode = #{accountZipcode,jdbcType=CHAR},
+            </if>
+            <if test="accountQq != null">
+                account_qq = #{accountQq,jdbcType=VARCHAR},
+            </if>
+            <if test="accountLastLoginTime != null">
+                account_last_login_time = #{accountLastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountLastLoginIp != null">
+                account_last_login_ip = #{accountLastLoginIp,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where account_id = #{accountId,jdbcType=INTEGER} and account_status != '2'
+    </update>
+</mapper>

@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <form id="account_detail_form" action="" method="" class="main_form">
+            <!--必填项-->
+            <div class="text_info clearfix"><span>账务账号ID：</span></div>
+            <div class="input_info"><input id="accountId" name="accountId" type="text" value=${json} readonly
+                    class="readonly" /></div>
+            <div class="text_info clearfix"><span>姓名：</span></div>
+            <div class="input_info"><input id="accountRealName" name="accountRealName" type="text" value="" readonly
+                    class="readonly" /></div>
+            <div class="text_info clearfix"><span>身份证：</span></div>
+            <div class="input_info">
+                <input id="accountIdcardNo" name="accountIdcardNo" type="text" value="230198765432123456" readonly
+                    class="readonly" />
+            </div>
+            <div class="text_info clearfix"><span>登录账号：</span></div>
+            <div class="input_info">
+                <input id="accountLoginName" name="accountLoginName" type="text" value="user1" readonly
+                    class="readonly" />
+            </div>
+            <div class="text_info clearfix"><span>电话：</span></div>
+            <div class="input_info">
+                <input id="accountTelephone" name="accountTelephone" type="text" class="width200 readonly" readonly
+                    value="" />
+            </div>
+            <div class="text_info clearfix"><span>推荐人账务账号ID：</span></div>
+            <div class="input_info"><input id="accountRecommenderId" name="accountRecommenderId" type="text" readonly
+                    class="readonly" value="" /></div>
+            <div class="text_info clearfix"><span>推荐人身份证号码：</span></div>
+            <div class="input_info"><input id="accountRecommenderIdcardNo" name="accountRecommenderIdcardNo" type="text"
+                    readonly class="readonly" value="" /></div>
+            <div class="text_info clearfix"><span>状态：</span></div>
+            <div class="input_info">
+                <select id="accountStatus" name="accountStatus" disabled>
+                    <option value="0">开通</option>
+                    <option value="1">暂停</option>
+                    <option value="2">删除</option>
+                </select>
+            </div>
+            <div class="text_info clearfix"><span>开通/暂停/删除时间：</span></div>
+            <div class="input_info"><input id="accountStatusTime" name="accountStatusTime" type="text" readonly
+                    class="readonly" value="" /></div>
+
+            <div class="text_info clearfix"><span>上次登录时间：</span></div>
+            <div class="input_info"><input id="accountLastLoginTime" name="accountLastLoginTime" type="text" readonly
+                    class="readonly" value="" /></div>
+            <div class="text_info clearfix"><span>上次登录IP：</span></div>
+            <div class="input_info"><input id="accountLastLoginIp" name="accountLastLoginIp" type="text" readonly
+                    class="readonly" value="192.168.0.100" /></div>
+            <!--可选项数据-->
+            <div class="text_info clearfix"><span>生日：</span></div>
+            <div class="input_info">
+                <input id="accountBirthdate" name="accountBirthdate" type="text" readonly class="readonly" value="" />
+            </div>
+            <div class="text_info clearfix"><span>Email：</span></div>
+            <div class="input_info">
+                <input id="accountEmail" name="accountEmail" type="text" class="width350 readonly" readonly
+                    value="aa@aa.com" />
+            </div>
+            <div class="text_info clearfix"><span>职业：</span></div>
+            <div class="input_info">
+                <select id="accountOccupation" name="accountOccupation" disabled>
+                    <option value="干部">干部</option>
+                    <option value="学生">学生</option>
+                    <option value="技术人员">技术人员</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="text_info clearfix"><span>性别：</span></div>
+            <div class="input_info fee_type">
+                <input type="radio" name="accountGender" value="1" id="female" disabled />
+                <label for="female">女</label>
+                <input type="radio" name="accountGender" value="0" id="male" disabled />
+                <label for="male">男</label>
+            </div>
+            <div class="text_info clearfix"><span>通信地址：</span></div>
+            <div class="input_info"><input id="accountMailAddress" name="accountMailAddress" type="text"
+                    class="width350 readonly" readonly value="" />
+            </div>
+            <div class="text_info clearfix"><span>邮编：</span></div>
+            <div class="input_info"><input id="accountZipcode" name="accountZipcode" type="text" class="readonly"
+                    readonly value="" /></div>
+            <div class="text_info clearfix"><span>QQ：</span></div>
+            <div class="input_info"><input id="accountQq" name="accountQq" type="text" class="readonly" readonly
+                    value="" /></div>
+            <!--操作按钮-->
+            <div class="button_info clearfix">
+                <input type="button" value="返回" class="btn_save" onclick="location.href='account_list.html';" />
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+    $(function () {
+        global_post("/account/selectById",
+            { 'accountId': sessionStorage.getItem("detailAccountId") },
+            function (result) {
+                if (result.code == 200) {
+                    var account = result.data;
+                    console.log(account);
+                    g_fillForm($('#account_detail_form'), result.data);
+                    //开通，暂停，删除时间三合一
+                    if (account.accountStatus == "2")
+                        $('#accountStatusTime').val(account.accountCloseDate);
+                    else if (account.accountStatus == "1")
+                        $('#accountStatusTime').val(account.accountPauseDate);
+                    else if (account.accountStatus == "0")
+                        $('#accountStatusTime').val(account.accountCreateDate);
+
+                    //额外查询一次推荐人身份证号
+                    if (account.accountRecommenderId > 0) {
+                        global_post("/account/selectById",
+                            { 'accountId': account.accountRecommenderId },
+                            function (result) {
+                                if (result.code == 200) {
+                                    $('#accountRecommenderIdcardNo').val(result.data.accountIdcardNo);
+                                 }
+
+                            });
+                    }
+
+                } else if (result.code == 500) {
+                    location.href = "/page/error.html"
+                }
+            });
+    })
+
+</script>
+
+</html>

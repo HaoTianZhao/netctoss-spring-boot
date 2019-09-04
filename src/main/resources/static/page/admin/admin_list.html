@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+    <script type="text/javascript" src="/page/js/admin_list_init.js"></script>
+    <script type="text/javascript" src="/page/js/pagination.js"></script>
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <form id="select_admin" action="" method="">
+            <!--查询-->
+            <div class="search_add">
+                <div>
+                    模块：
+                    <select id="selModules" name="selModules" class="select_search">
+                        <option>全部</option>
+                        <option>角色管理</option>
+                        <option>管理员管理</option>
+                        <option>资费管理</option>
+                        <option>账务账号</option>
+                        <option>业务账号</option>
+                        <option>账单管理</option>
+                        <option>报表</option>
+                    </select>
+                </div>
+                <div>角色：<input id="roleName" name="roleName" type="text" value="" class="text_search width200" /></div>
+                <div><input type="button" value="搜索" class="btn_search" onclick="selectPage()" /></div>
+                <input type="button" value="密码重置" class="btn_add" onclick="resetPwd();" />
+                <input type="button" value="增加" class="btn_add" onclick="location.href='admin_add.html';" />
+            </div>
+            <!--删除和密码重置的操作提示-->
+            <div id="operate_result_info" class="operate_fail">
+                <img src="../images/close.png" onclick="this.parentNode.style.display='none'; location.reload()" />
+                <p></p>
+            </div>
+            <!--数据区域：用表格展示数据-->
+            <div id="data">
+                <table id="datalist">
+                </table>
+            </div>
+            <!--分页-->
+            <div id="pages">
+            </div>
+        </form>
+    </div>
+</body>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        global_post("/admin/getPageInfo", { 'currentPage': 1, 'nextPage': true, 'pageSize': 10 },
+            function (result) {
+                if (result.code == 200) {
+                    $('#datalist').initAdminList(result.data);
+                    $('#pages').pagination('/admin/getPageInfo', $('#datalist').initAdminList, 1, 10, result.data.totalCount);
+                } else if (result.code == 500) {
+                    global_operate_result(false, "服务器故障，无法查看角色信息。");
+                }
+            });
+    });
+
+    //根据权限组和角色名查询
+    function selectPage() {
+        console.log($('#select_admin').serialize());
+        global_post("/admin/getPageInfoSelected",
+            { 'currentPage': 1, 'nextPage': true, 'pageSize': 10, 'privilegeName': $('#selModules').val(), 'roleName': $('#roleName').val() },
+            function (result) {
+                if (result.code == 200) {
+                    $('#datalist').initAdminList(result.data);
+                    $('#pages').pagination('/admin/getPageInfoSelected', $('#datalist').initAdminList, 1, 10, result.data.totalCount,
+                        'privilegeName', $('#selModules').val(), 'roleName', $('#roleName').val());
+                } else if (result.code == 500) {
+                    global_operate_result(false, "服务器故障，无法查看角色信息。");
+                }
+            });
+    }
+
+    //显示角色详细信息
+    function showDetail(flag, a) {
+        var detailDiv = a.parentNode.getElementsByTagName("div")[0];
+        if (flag) {
+            detailDiv.style.display = "block";
+        }
+        else
+            detailDiv.style.display = "none";
+    }
+
+    //全选
+    function selectAdmins(inputObj) {
+        var inputArray = document.getElementById("datalist").getElementsByTagName("input");
+        for (var i = 1; i < inputArray.length; i++) {
+            if (inputArray[i].type == "checkbox") {
+                inputArray[i].checked = inputObj.checked;
+            }
+        }
+    }
+
+    //重置密码
+    function resetPwd() {
+        var adminIds = new Array;
+        var adminCodes = new Array;
+        getSelectAdminIds(adminIds, adminCodes);
+        if (adminIds.length == 0 || adminCodes.length == 0) {
+            alert("请至少选择一条数据！");
+            return;
+        }
+        console.log({ adminIds, adminCodes });
+        global_post("/admin/resetPassword", { adminIds, adminCodes }, function (result) {
+            if (result.code == 200) {
+                global_operate_result(true, "重置密码成功");
+            } else if (result.code == 500) {
+                global_operate_result(false, "重置密码失败，并发错误");
+            }
+        });
+    }
+
+    //获取当前选中的管理员id列表
+    function getSelectAdminIds(adminIds, adminCodes) {
+        var tr = $('#datalist tr');
+        for (var i = 1; i < tr.length; i++) {
+            if ($(tr[i]).find('input')[0].checked == true) {
+                adminIds.push($(tr[i]).find('td')[1].innerText);
+                adminCodes.push($(tr[i]).find('td')[3].innerText);
+            }
+        }
+    }
+</script>
+
+</html>

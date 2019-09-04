@@ -1,0 +1,16 @@
+<img src="../images/logo.png" alt="logo" class="left" />
+<span>当前账号：<b id="current_admin"></b></span>
+<a href="#" id="logout">[退出]</a>
+<script>
+    $(function () {
+        $('#current_admin').text(sessionStorage.getItem("current_admin"));
+    });
+
+    $('#logout').click(function () {
+        console.log("asasd");
+        $.post("/logout", function () {
+            sessionStorage.clear();
+            location.href = "/page/login.html";
+        });
+    });
+</script>
