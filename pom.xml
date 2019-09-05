@@ -129,6 +129,16 @@
             <version>3.9</version>
         </dependency>
 
+        <!--可视化界面查看项目方法执行流程-->
+        <!--/tree/project.html	        返回完整调用链视图-->
+        <!--/tree/project.html?all=1	返回全部方法视图-->
+        <!--/projecttree/all	        JSON形式的返回结果-->
+        <!--/projecttree/{methodId}	    对某一方法的JSON结果-->
+        <dependency>
+            <groupId>cn.yueshutong</groupId>
+            <artifactId>tree-spring-boot-starter</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
 
 
     </dependencies>
