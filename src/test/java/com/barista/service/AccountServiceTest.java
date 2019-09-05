@@ -65,10 +65,10 @@ public class AccountServiceTest {
         account.setAccountTelephone("15626134357");
     }
 
-    @Test
-    public void insertAccount() {
-        System.out.println(accountService.insertAccount(account));
-    }
+//    @Test
+//    public void insertAccount() {
+//        System.out.println(accountService.insertAccount(account));
+//    }
 
     @Test
     public void startUsing() {
@@ -85,9 +85,9 @@ public class AccountServiceTest {
         System.out.println(accountService.deleteAccount(account.getAccountId()));
     }
 
-    @Test
-    public void updateAccount() {
-        System.out.println(accountService.updateAccount(account));
-    }
+//    @Test
+//    public void updateAccount() {
+//        System.out.println(accountService.updateAccount(account));
+//    }
 
 }

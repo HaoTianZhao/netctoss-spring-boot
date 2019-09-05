@@ -71,10 +71,10 @@ public class ServiceServiceTest {
         service.setCostId(1001);
     }
 
-    @Test
-    public void insertSelective() {
-        System.out.println(serviceService.insertService(service));
-    }
+//    @Test
+//    public void insertSelective() {
+//        System.out.println(serviceService.insertService(service));
+//    }
 
     @Test
     public void startUsing() {

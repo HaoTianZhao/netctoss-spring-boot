@@ -2,7 +2,6 @@ package com.barista.util;
 
 import com.barista.result.Result;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,7 +50,7 @@ public class FileUtil {
         return Result.success(true);
     }
 
-    public static File upload(@NotNull MultipartFile file) {
+    public static File upload( MultipartFile file) {
         String fileName = file.getOriginalFilename();
         File path = new File(UPLOAD_DEST_PATH);
         if (!path.exists()) {

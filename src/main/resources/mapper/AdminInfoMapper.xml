@@ -107,6 +107,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.AdminInfo">
         update admin_info
         <set>
+            <if test="adminId != null">
+                admin_id = #{adminId,jdbcType=INTEGER},
+            </if>
             <if test="adminCode != null">
                 admin_code = #{adminCode,jdbcType=VARCHAR},
             </if>

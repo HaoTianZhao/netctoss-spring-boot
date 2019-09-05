@@ -47,20 +47,20 @@ public class CostServiceTest {
         System.out.println(JSON.toJSONString(costService.selectPagingOrder(1, 10, "cost_base_duration desc")));
     }
 
-    @Test
-    public void insertCost() {
-        Cost cost = new Cost();
-        cost.setCostId(1001);
-        cost.setCostName("100元套餐测试");
-        cost.setCostBaseDuration(500);
-        cost.setCostBaseCost(new BigDecimal(100.0));
-        cost.setCostUnitCost(new BigDecimal(0.1));
-        cost.setCostDescr("测试描述信息");
-        cost.setCostType("2");
-
-        int result = costService.insertCost(cost);
-        System.out.println(result);
-    }
+//    @Test
+//    public void insertCost() {
+//        Cost cost = new Cost();
+//        cost.setCostId(1001);
+//        cost.setCostName("100元套餐测试");
+//        cost.setCostBaseDuration(500);
+//        cost.setCostBaseCost(new BigDecimal(100.0));
+//        cost.setCostUnitCost(new BigDecimal(0.1));
+//        cost.setCostDescr("测试描述信息");
+//        cost.setCostType("2");
+//
+//        int result = costService.insertCost(cost);
+//        System.out.println(result);
+//    }
 
     @Test
     public void startUsing() {

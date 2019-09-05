@@ -33,6 +33,7 @@ public class AdminInfoControllerTest {
 
     @Test
     public void addAdmin() {
+        adminInfoController.deleteAdmin(1003);
         roleIds = new Integer[]{1, 2, 3, 4, 5, 6};
         adminInfo = new AdminInfo();
         adminInfo.setAdminCode("qwe");
