@@ -27,7 +27,6 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-@EnableScheduling
 public class ScheduleService {
     private Logger logger = LoggerFactory.getLogger(ScheduleService.class);
 
