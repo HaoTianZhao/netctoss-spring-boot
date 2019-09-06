@@ -1,11 +1,14 @@
 package com.barista.controller;
 
 import com.barista.entity.AdminInfo;
+import com.barista.interceptor.LoginInterceptor;
 import com.barista.result.Result;
 import com.barista.result.ResultCode;
 import com.barista.service.AdminRoleService;
 import com.barista.service.AdminService;
 import com.barista.service.AuthorityService;
+import com.barista.util.JwtUtil;
+import com.barista.util.RedisUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +41,12 @@ public class LoginController {
     @Autowired
     private AuthorityService authorityService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
     @RequestMapping("login")
     public Result login(AdminInfo admin, String checkCode, HttpSession session) {
         String adminCode = admin.getAdminCode();
@@ -55,11 +64,11 @@ public class LoginController {
             return Result.fail(ResultCode.PASSWORD_ERROR);
         }
         if (adminService.checkPassword(admin.getAdminPassword(), dbAdmin.getAdminPassword())) {
-            //todo 用户登录成功，用SHA加盐加密保存token
-            session.setAttribute("token", adminCode);
+            String token = jwtUtil.generateToken(admin.getAdminCode());
             List<Integer> adminPrivileges = authorityService.selectPermissionGroupIds(dbAdmin.getAdminId());
             Set<Integer> set = new HashSet<>(adminPrivileges);
-            return Result.success(set);
+            session.setAttribute(LoginInterceptor.USER_KEY, token);
+            return Result.success(set, token);
         } else {
             return Result.fail(ResultCode.PASSWORD_ERROR);
         }

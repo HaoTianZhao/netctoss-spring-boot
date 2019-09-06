@@ -4,6 +4,9 @@ import com.barista.result.Result;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -25,23 +28,15 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2019/9/4 11:07
  * @Version 1.0
  */
+@Component
+@PropertySource(value = "classpath:file.properties")
+@ConfigurationProperties(prefix = "file")
 public class FileUtil {
-    private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    private Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
-    private static String UPLOAD_DEST_PATH;
+    private String uploadPath;
 
-    private static String DOWNLOAD_SOURCE_PATH;
-
-    static {
-        Properties properties = new Properties();
-        try {
-            properties.load(FileUtil.class.getClassLoader().getResourceAsStream("file.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        UPLOAD_DEST_PATH = properties.getProperty("file.upload.path");
-        DOWNLOAD_SOURCE_PATH = properties.getProperty("file.download.path");
-    }
+    private String downloadPath;
 
     public static Result checkFileName(String fileName) {
         if (fileName.contains("---")) {
@@ -50,9 +45,9 @@ public class FileUtil {
         return Result.success(true);
     }
 
-    public static File upload( MultipartFile file) {
+    public File upload(MultipartFile file) {
         String fileName = file.getOriginalFilename();
-        File path = new File(UPLOAD_DEST_PATH);
+        File path = new File(uploadPath);
         if (!path.exists()) {
             boolean success = path.mkdirs();
             if (!success) {
@@ -71,9 +66,9 @@ public class FileUtil {
         return null;
     }
 
-    public static boolean download(String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
+    public boolean download(String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
         //设置文件路径
-        File file = new File(DOWNLOAD_SOURCE_PATH, fileName);
+        File file = new File(downloadPath, fileName);
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");
         response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "UTF-8"));

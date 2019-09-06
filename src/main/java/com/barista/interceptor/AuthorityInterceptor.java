@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.barista.result.Result;
 import com.barista.result.ResultCode;
 import com.barista.service.AuthorityService;
+import com.barista.util.JwtUtil;
+import com.barista.util.RedisUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +38,16 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AuthorityInterceptor extends HandlerInterceptorAdapter {
     private Logger logger = LoggerFactory.getLogger(AuthorityInterceptor.class);
+    public static final String AUTH_KEY = "authority";
 
     @Autowired
-    AuthorityService authorityService;
+    private AuthorityService authorityService;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -47,22 +58,26 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
           一、用户登录时查表，把所有权限路径保存在session，每个请求都拦截，查是否有权限访问。
           二、自定义注解，加在controller类或方法上，拦截每个请求，根据注解中的对角色的要求查询当前用户是否有权限。
 */
-        //todo 用SHA私钥解密，与session比较是否相同，验证时间戳是否过期，并获得用户名
-        String token = (String) request.getSession().getAttribute("token");
-        String url = request.getRequestURL().toString();
-        String username = token;
-        Set<String> authority = (Set<String>) request.getSession().getAttribute("authority");
-        if (authority == null) {
-            authority = authorityService.selectAllPermission(username);
-            request.getSession().setAttribute("authority", authority);
+        //从redis或数据库中获取权限，检查请求路径是否在权限中
+        String userName = (String) request.getAttribute(LoginInterceptor.USER_KEY);
+        if (Objects.isNull(userName)) {
+            userName = (String) request.getSession().getAttribute(LoginInterceptor.USER_KEY);
         }
-        //有权限访问
-        for (String s : authority) {
-            if (url.matches(s)) {
-                return true;
+        String url = request.getRequestURL().toString();
+        if (Objects.nonNull(userName)) {
+            Set<String> authority = (Set<String>) redisUtil.get(AUTH_KEY + userName);
+            if (Objects.isNull(authority)) {
+                authority = authorityService.selectAllPermission(userName);
+                redisUtil.set(AUTH_KEY + userName, authority);
+            }
+            //有权限访问
+            for (String s : authority) {
+                if (url.matches(s)) {
+                    return true;
+                }
             }
         }
-        logger.debug(username + "访问" + url + "失败，没有权限。");
+        logger.debug(userName + "访问" + url + "失败，没有权限。");
         if (request.getRequestURL().toString().contains(".html")) {
             response.sendRedirect("/page/nopower.html");
         } else {
@@ -83,8 +98,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             Class clazz = handlerMethod.getBeanType();
             Object object = handlerMethod.getBean();
             Object castObject = clazz.cast(object);
-
-
         }
         int i = 0;
     }

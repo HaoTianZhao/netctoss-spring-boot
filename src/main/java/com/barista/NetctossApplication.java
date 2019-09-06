@@ -17,7 +17,7 @@ import cn.yueshutong.springprojecttree.config.annotation.EnableProjectTree;
 @EnableScheduling
 @EnableCaching
 @EnableTransactionManagement
-@EnableProjectTree(value = "execution(* com.barista..*.*(..))")
+//@EnableProjectTree(value = "execution(* com.barista..*.*(..))")
 public class NetctossApplication {
 
     public static void main(String[] args) {

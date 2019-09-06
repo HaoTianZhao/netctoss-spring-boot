@@ -31,6 +31,7 @@ function global_operate_result(success, text) {
 
 function global_post(url, data, callback) {
     $.post({
+        headers: { "token": localStorage.getItem("token") },
         url, data,
         success: function (result) {
             if (result.code == 0) {

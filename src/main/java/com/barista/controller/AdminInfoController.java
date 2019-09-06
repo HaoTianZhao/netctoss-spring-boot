@@ -5,11 +5,13 @@ import com.barista.VO.AdminManageVO;
 import com.barista.VO.PersonalInfoVO;
 import com.barista.entity.AdminInfo;
 import com.barista.entity.Role;
+import com.barista.interceptor.LoginInterceptor;
 import com.barista.result.Result;
 import com.barista.result.ResultCode;
 import com.barista.service.AdminRoleService;
 import com.barista.service.AdminService;
 import com.barista.service.RolePrivilegeService;
+import com.barista.util.JwtUtil;
 import com.barista.util.MD5Util;
 import com.barista.util.ValueUtil;
 
@@ -23,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 管理员管理
@@ -45,13 +47,16 @@ public class AdminInfoController {
     @Autowired
     RolePrivilegeService rolePriService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     @RequestMapping("/getAdminInfo")
-    public Result getAdminInfo(String adminCode, HttpSession session) {
+    public Result getAdminInfo(String adminCode, HttpServletRequest request) {
         if (adminCode == null) {
             return Result.fail(ResultCode.ILLEGAL_PARAM);
         }
-        if (!Objects.equals(adminCode, session.getAttribute("token"))) {
+        if (!Objects.equals(adminCode, request.getAttribute(LoginInterceptor.USER_KEY))) {
             return Result.fail(ResultCode.NO_PERMISSION);
         }
         AdminInfo adminInfo = adminService.selectByAdminCode(adminCode);
@@ -62,11 +67,11 @@ public class AdminInfoController {
     }
 
     @RequestMapping("/updateAdminInfo")
-    public Result updateAdminInfo(AdminInfo adminInfo, HttpSession session) {
+    public Result updateAdminInfo(AdminInfo adminInfo, HttpServletRequest request) {
         if (adminInfo.getAdminCode() == null) {
             return Result.fail(ResultCode.ILLEGAL_PARAM);
         }
-        if (!Objects.equals(adminInfo.getAdminCode(), session.getAttribute("token"))) {
+        if (!Objects.equals(adminInfo.getAdminCode(), request.getAttribute(LoginInterceptor.USER_KEY))) {
             return Result.fail(ResultCode.NO_PERMISSION);
         }
         AdminInfo admin = new AdminInfo();
@@ -84,11 +89,11 @@ public class AdminInfoController {
     }
 
     @RequestMapping("/changePassword")
-    public Result changePassword(String oldPassword, String newPassword, HttpSession session) {
+    public Result changePassword(String oldPassword, String newPassword, HttpServletRequest request) {
         if (oldPassword == null || newPassword == null) {
             return Result.fail(ResultCode.ILLEGAL_PARAM);
         }
-        String adminCode = Objects.toString(session.getAttribute("token"), "");
+        String adminCode = Objects.toString(request.getAttribute(LoginInterceptor.USER_KEY), "");
         AdminInfo dbAdmin = adminService.selectByAdminCode(adminCode);
         if (!adminService.checkPassword(oldPassword, dbAdmin.getAdminPassword())) {
             return Result.fail(ResultCode.PASSWORD_ERROR);

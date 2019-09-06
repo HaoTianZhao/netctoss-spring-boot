@@ -7,6 +7,7 @@ import com.barista.util.MailUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -39,10 +41,13 @@ import javax.servlet.http.HttpServletResponse;
 public class FileController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileController.class);
 
+    @Autowired
+    private FileUtil fileUtil;
+
     @PostMapping("/upload")
     @ResponseBody
     public Result upload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
+        if (Objects.isNull(file) || file.isEmpty()) {
             return Result.fail("上传失败，请选择文件");
         }
         Result checkName = FileUtil.checkFileName(file.getOriginalFilename());
@@ -50,7 +55,7 @@ public class FileController {
             return checkName;
         }
 
-        File result = FileUtil.upload(file);
+        File result = fileUtil.upload(file);
         if (Objects.nonNull(result)) {
             return Result.success("上传成功");
         } else {
@@ -64,13 +69,13 @@ public class FileController {
             return;
         }
 
-        FileUtil.download(fileName, response);
+        fileUtil.download(fileName, response);
     }
 
     @PostMapping("/email")
     @ResponseBody
     public Result sendEmail(String to, String title, String content, MultipartFile file) throws IOException, MessagingException {
-        File tempFile = FileUtil.upload(file);
+        File tempFile = fileUtil.upload(file);
         if (Objects.nonNull(file)) {
             MailUtil.send(to, null, null, title, content, tempFile.getPath(), "UTF-8");
             tempFile.delete();

@@ -12,9 +12,14 @@ public class Result<T> {
     private int code;
     private String msg;
     private T data;
+    private String token;
 
     public static <T> Result<T> success(T data) {
         return new Result<>(ResultCode.SUCCESS, data);
+    }
+
+    public static <T> Result<T> success(T data, String token) {
+        return new Result<>(ResultCode.SUCCESS, data, token);
     }
 
     public static Result fail(ResultCode code) {
@@ -25,19 +30,23 @@ public class Result<T> {
         return new Result(ResultCode.CUSTOM_ERROR.getCode(), msg);
     }
 
-    public boolean isSuccess(){
+    public boolean isSuccess() {
         return this.code == 200;
     }
 
-    private Result(ResultCode code, T data) {
+    private Result(ResultCode code, T data, String token) {
         this.code = code.getCode();
         this.msg = code.getMsg();
         this.data = data;
+        this.token = token;
+    }
+
+    private Result(ResultCode code, T data) {
+        this(code, data, null);
     }
 
     private Result(ResultCode code) {
-        this.code = code.getCode();
-        this.msg = code.getMsg();
+        this(code, null, null);
     }
 
     private Result(int code, String msg) {
@@ -67,5 +76,13 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

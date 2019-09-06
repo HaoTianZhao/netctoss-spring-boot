@@ -34,7 +34,7 @@
                     <td class="login_info">验证码：</td>
                     <td class="width70"><input name="checkCode" id="checkCode" type="text" class="width70" /></td>
                     <td><img id="check_code_image" src="/images/checkCode" alt="验证码" title="点击更换"
-                            onclick="$('#check_code_image').attr('src','/static/images/checkCode?v=' + Math.random())" />
+                            onclick="$('#check_code_image').attr('src','/images/checkCode?v=' + Math.random())" />
                     </td>
                     <td hidden id="check_code_error"><span class="required">验证码错误</span></td>
                 </tr>
@@ -105,11 +105,12 @@
                     sessionStorage.setItem("current_admin", $('#adminCode').val())
                     sessionStorage.setItem("privileges", result.data);
                     sessionStorage.setItem("current_page", "index_link");
-                    location.href = "index.html";
+                    localStorage.setItem("token", result.token);
+                    location.href = "index.html?token=" + localStorage.getItem("token");
                 }
                 else if (result.code == 10) {
                     $('#check_code_error').show();
-                    $('#check_code_image').attr('src','/static/images/checkCode?v=' + Math.random())
+                    $('#check_code_image').attr('src', '/images/checkCode?v=' + Math.random())
                 } else if (result.code == 20) {
                     $('#login_error').show();
                 }
