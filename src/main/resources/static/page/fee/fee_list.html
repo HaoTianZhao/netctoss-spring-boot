@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+    <script type="text/javascript" src="/page/js/fee_list_init.js"></script>
+    <script type="text/javascript" src="/page/js/pagination.js"></script>
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <form id="select_cost" action="" method="">
+            <!--排序-->
+            <div class="search_add">
+                <div>
+                    <input type="button" id="cost_base_cost" value="月租" class="sort_asc" onclick="sort(this);" />
+                    <input type="button" id="cost_unit_cost" value="基费" class="sort_asc" onclick="sort(this);" />
+                    <input type="button" id="cost_base_duration" value="时长" class="sort_asc" onclick="sort(this);" />
+                    <input id="orderBy" name="orderBy" type="text" hidden value="" />
+                </div>
+                <input type="button" value="增加" class="btn_add" onclick="location.href='fee_add.html';" />
+            </div>
+            <!--启用操作的操作提示-->
+            <div id="operate_result_info" class="operate_success">
+                <img src="../images/close.png" onclick="this.parentNode.style.display='none'; location.reload()" />
+                <p></p>
+            </div>
+            <!--数据区域：用表格展示数据-->
+            <div id="data">
+                <table id="datalist">
+                </table>
+                <p>业务说明：<br />
+                    1、创建资费时，状态为暂停，记载创建时间；<br />
+                    2、暂停状态下，可修改，可删除；<br />
+                    3、开通后，记载开通时间，且开通后不能修改、不能再停用、也不能删除；<br />
+                    4、业务账号修改资费时，在下月底统一触发，修改其关联的资费ID（此触发动作由程序处理）
+                </p>
+            </div>
+            <!--分页-->
+            <div id="pages">
+            </div>
+        </form>
+    </div>
+</body>
+
+<script language="javascript" type="text/javascript">
+    $(function () {
+
+        global_post("/cost/getPageInfo", { 'currentPage': 1, 'pageSize': 10 },
+            function (result) {
+                if (result.code == 200) {
+                    $('#datalist').initCostList(result.data);
+                    $('#pages').pagination('/cost/getPageInfo', $('#datalist').initCostList, 1, 10, result.data.totalCount);
+                } else if (result.code == 500) {
+                    global_operate_result(false, "服务器故障，无法查看角色信息。");
+                }
+            });
+    });
+
+    //排序按钮的点击事件
+    function sort(btnObj) {
+        if (btnObj.className == "sort_desc") {
+            $('#orderBy').val(btnObj.id + " ");
+            $('#cost_base_cost').removeClass("sort_desc");
+            $('#cost_unit_cost').removeClass("sort_desc");
+            $('#cost_base_duration').removeClass("sort_desc");
+            $('#cost_base_cost').addClass("sort_asc");
+            $('#cost_unit_cost').addClass("sort_asc");
+            $('#cost_base_duration').addClass("sort_asc");
+
+            $(btnObj).removeClass("sort_desc");
+            $(btnObj).addClass("sort_asc");
+        }
+        else {
+            $('#orderBy').val(btnObj.id + " desc");
+            $('#cost_base_cost').removeClass("sort_desc");
+            $('#cost_unit_cost').removeClass("sort_desc");
+            $('#cost_base_duration').removeClass("sort_desc");
+            $('#cost_base_cost').addClass("sort_asc");
+            $('#cost_unit_cost').addClass("sort_asc");
+            $('#cost_base_duration').addClass("sort_asc");
+
+            $(btnObj).removeClass("sort_asc");
+            $(btnObj).addClass("sort_desc");
+        }
+        selectPageOrdered();
+    }
+
+    //根据指定排序查询
+    function selectPageOrdered() {
+        console.log($('#select_cost').serialize());
+        global_post("/cost/getPageInfoSelected",
+            { 'currentPage': 1, 'pageSize': 10, 'orderBy': $('#orderBy').val() },
+            function (result) {
+                if (result.code == 200) {
+                    $('#datalist').initCostList(result.data);
+                    $('#pages').pagination('/cost/getPageInfoSelected', $('#datalist').initCostList, 1, 10, result.data.totalCount,
+                        'orderBy', $('#orderBy').val());
+                } else if (result.code == 500) {
+                    global_operate_result(false, "服务器故障，无法查看角色信息。");
+                }
+            });
+    }
+</script>
+
+</html>

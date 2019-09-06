@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="../styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/page/js/global.js"></script>
+</head>
+
+<body>
+    <!--Logo区域开始-->
+    <div id="header">
+        <script>
+            $("#header").load("../component/head.html");
+        </script>
+    </div>
+    <!--Logo区域结束-->
+    <!--导航区域开始-->
+    <div id="navi">
+        <script>
+            $("#navi").load("../component/navi.html");
+        </script>
+    </div>
+    <!--导航区域结束-->
+    <!--主要区域开始-->
+    <div id="main">
+        <!--保存成功或者失败的提示消息-->
+        <div id="save_result_info" class="save_fail">保存失败，旧密码错误！</div>
+        <form id="account_modi" action="" method="" class="main_form">
+            <!--必填项-->
+            <div class="text_info clearfix"><span>账务账号ID：</span></div>
+            <div class="input_info">
+                <input id="accountId" name="accountId" type="text" value="10" readonly class="readonly" />
+            </div>
+            <div class="text_info clearfix"><span>姓名：</span></div>
+            <div class="input_info">
+                <input id="accountRealName" name="accountRealName" type="text" value="" />
+                <span class="required">*</span>
+                <div id="accountRealNameError" class="validate_msg_medium error_msg">20长度以内的汉字、字母和数字的组合</div>
+            </div>
+            <div class="text_info clearfix"><span>身份证：</span></div>
+            <div class="input_info">
+                <input id="accountIdcardNo" name="accountIdcardNo" type="text" value="230198765432123456" readonly
+                    class="readonly" />
+            </div>
+            <div class="text_info clearfix"><span>登录账号：</span></div>
+            <div class="input_info">
+                <input id="accountLoginName" name="accountLoginName" type="text" value="user1" readonly
+                    class="readonly" />
+                <div class="change_pwd">
+                    <input id="chkModiPwd" type="checkbox" onclick="showPwd(this);" />
+                    <label for="chkModiPwd">修改密码</label>
+                </div>
+            </div>
+            <!--修改密码部分-->
+            <div id="divPwds">
+                <div class="text_info clearfix"><span>旧密码：</span></div>
+                <div class="input_info">
+                    <input id="oldPassword" name="oldPassword" type="password" />
+                    <span class="required">*</span>
+                    <div class="validate_msg_long">30长度以内的字母、数字和下划线的组合</div>
+                </div>
+                <div class="text_info clearfix"><span>新密码：</span></div>
+                <div class="input_info">
+                    <input id="newPassword" name="newPassword" type="password" />
+                    <span class="required">*</span>
+                    <div class="validate_msg_long">30长度以内的字母、数字和下划线的组合</div>
+                </div>
+                <div class="text_info clearfix"><span>重复新密码：</span></div>
+                <div class="input_info">
+                    <input type="password" />
+                    <span class="required">*</span>
+                    <div class="validate_msg_long">两次密码必须相同</div>
+                </div>
+            </div>
+            <div class="text_info clearfix"><span>电话：</span></div>
+            <div class="input_info">
+                <input id="accountTelephone" name="accountTelephone" type="text" class="width200" />
+                <span class="required">*</span>
+                <div id="accountTelephoneError" class="validate_msg_medium error_msg">正确的电话号码格式：手机或固话</div>
+            </div>
+            <div class="text_info clearfix"><span>推荐人身份证号码：</span></div>
+            <div class="input_info">
+                <input id="accountRecommenderIdcardNo" name="accountRecommenderIdcardNo" type="text" />
+                <div id="accountRecommenderIdcardNoError" class="validate_msg_long error_msgs">正确的身份证号码格式</div>
+            </div>
+            <div class="text_info clearfix"><span>生日：</span></div>
+            <div class="input_info">
+                <input id="accountBirthdate" name="accountBirthdate" type="text" value="由身份证号计算而来" readonly
+                    class="readonly" />
+            </div>
+            <div class="text_info clearfix"><span>Email：</span></div>
+            <div class="input_info">
+                <input id="accountEmail" name="accountEmail" type="text" class="width200" />
+                <div id="accountEmailError" class="validate_msg_medium">50长度以内，合法的 Email 格式</div>
+            </div>
+            <div class="text_info clearfix"><span>职业：</span></div>
+            <div class="input_info">
+                <select id="accountOccupation" name="accountOccupation">
+                    <option value="干部">干部</option>
+                    <option value="学生">学生</option>
+                    <option value="技术人员">技术人员</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="text_info clearfix"><span>性别：</span></div>
+            <div class="input_info fee_type">
+                <input type="radio" name="accountGender" value="1" id="female" onclick="feeTypeChange(1);" />
+                <label for="female">女</label>
+                <input type="radio" name="accountGender" value="0" id="male" onclick="feeTypeChange(2);" />
+                <label for="male">男</label>
+            </div>
+            <div class="text_info clearfix"><span>通信地址：</span></div>
+            <div class="input_info">
+                <input id="accountMailAddress" name="accountMailAddress" type="text" class="width350" />
+                <div id="accountMailAddressError" class="validate_msg_tiny">50长度以内</div>
+            </div>
+            <div class="text_info clearfix"><span>邮编：</span></div>
+            <div class="input_info">
+                <input id="accountZipcode" name="accountZipcode" type="text" />
+                <div id="accountZipcode" class="validate_msg_long">6位数字</div>
+            </div>
+            <div class="text_info clearfix"><span>QQ：</span></div>
+            <div class="input_info">
+                <input id="accountQq" name="accountQq" type="text" />
+                <div id="accountQq" class="validate_msg_long">5到13位数字</div>
+            </div>
+            <!--操作按钮-->
+            <div class="button_info clearfix">
+                <input id="submit" type="button" value="保存" class="btn_save" />
+                <input type="button" value="取消" class="btn_save" onclick='location.href="account_list.html"'/>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script language="javascript" type="text/javascript">
+    $(function () {
+        global_post("/account/selectById",
+            { 'accountId': sessionStorage.getItem("detailAccountId") },
+            function (result) {
+                if (result.code == 200) {
+                    console.log(result.data);
+                    g_fillForm($('#account_modi'), result.data);
+                    //额外查询一次推荐人身份证号
+
+                    if (result.data.accountRecommenderId > 0) {
+                        global_post("/account/selectById",
+                            { 'accountId': result.data.accountRecommenderId },
+                            function (result) {
+                                if (result.code == 200) {
+                                    $('#accountRecommenderIdcardNo').val(result.data.accountIdcardNo);
+                                }
+
+                            });
+                    }
+                } else if (result.code == 500) {
+                    location.href = "/page/error.html"
+                }
+            });
+    });
+
+    $("#submit").click(function () {
+        global_post("/account/update",
+            $('#account_modi').serialize(),
+            function (result) {
+                if (result.code == 200) {
+                    gloal_save_result(true, "更新成功！")
+                } else if (result.code == 120) {
+                    gloal_save_result(false, "保存失败，登录名或身份证号已被使用！");
+                } else if (result.code == 500) {
+                    gloal_save_result(false, "保存失败，数据并发错误！");
+                }
+            });
+    });
+
+    //显示修改密码的信息项
+    function showPwd(chkObj) {
+        if (chkObj.checked)
+            document.getElementById("divPwds").style.display = "block";
+        else
+            document.getElementById("divPwds").style.display = "none";
+    }
+</script>
+
+</html>

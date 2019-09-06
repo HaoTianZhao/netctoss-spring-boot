@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.ServiceUpdateMapper">
+    <resultMap id="BaseResultMap" type="com.barista.entity.ServiceUpdate">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="service_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="unix_host" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="os_username" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="cost_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="service_create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, service_id, unix_host, os_username, cost_id, service_create_date
+    </sql>
+
+    <insert id="updateOrInsertSelective" parameterType="com.barista.entity.ServiceUpdate">
+        insert into service_update (service_id, unix_host,
+                                    os_username, cost_id, service_create_date)
+        values (#{serviceId,jdbcType=INTEGER}, #{unixHost,jdbcType=VARCHAR},
+                #{osUsername,jdbcType=VARCHAR}, #{costId,jdbcType=INTEGER},
+                now())
+        on duplicate key update unix_host           = #{unixHost,jdbcType=VARCHAR},
+                                os_username         = #{osUsername,jdbcType=VARCHAR},
+                                cost_id             = #{costId,jdbcType=INTEGER},
+                                service_create_date = now()
+    </insert>
+
+    <select id="selectPaging" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service_update
+        where id > #{id,jdbcType=INTEGER}
+        and service_create_date &lt; #{timePoint,jdbcType=TIMESTAMP}
+        limit #{pageSize, jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteUsedUpdateInfo" parameterType="integer">
+        delete
+        from service_update
+        where id &lt;= #{lastId,jdbcType=INTEGER}
+    </delete>
+
+
+    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >-->
+    <!--select -->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from service_update-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</select>-->
+
+    <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >-->
+    <!--delete from service_update-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</delete>-->
+
+    <!--<insert id="insert" parameterType="com.barista.entity.ServiceUpdate" >-->
+    <!--insert into service_update (id, service_id, unix_host, -->
+    <!--os_username, cost_id, service_create_date-->
+    <!--)-->
+    <!--values (#{id,jdbcType=INTEGER}, #{serviceId,jdbcType=INTEGER}, #{unixHost,jdbcType=VARCHAR}, -->
+    <!--#{osUsername,jdbcType=VARCHAR}, #{costId,jdbcType=INTEGER}, #{serviceCreateDate,jdbcType=TIMESTAMP}-->
+    <!--)-->
+    <!--</insert>-->
+
+    <!--<insert id="insertSelective" parameterType="com.barista.entity.ServiceUpdate" >-->
+    <!--insert into service_update-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+    <!--<if test="id != null" >-->
+    <!--id,-->
+    <!--</if>-->
+    <!--<if test="serviceId != null" >-->
+    <!--service_id,-->
+    <!--</if>-->
+    <!--<if test="unixHost != null" >-->
+    <!--unix_host,-->
+    <!--</if>-->
+    <!--<if test="osUsername != null" >-->
+    <!--os_username,-->
+    <!--</if>-->
+    <!--<if test="costId != null" >-->
+    <!--cost_id,-->
+    <!--</if>-->
+    <!--<if test="serviceCreateDate != null" >-->
+    <!--service_create_date,-->
+    <!--</if>-->
+    <!--</trim>-->
+    <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+    <!--<if test="id != null" >-->
+    <!--#{id,jdbcType=INTEGER},-->
+    <!--</if>-->
+    <!--<if test="serviceId != null" >-->
+    <!--#{serviceId,jdbcType=INTEGER},-->
+    <!--</if>-->
+    <!--<if test="unixHost != null" >-->
+    <!--#{unixHost,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="osUsername != null" >-->
+    <!--#{osUsername,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="costId != null" >-->
+    <!--#{costId,jdbcType=INTEGER},-->
+    <!--</if>-->
+    <!--<if test="serviceCreateDate != null" >-->
+    <!--#{serviceCreateDate,jdbcType=TIMESTAMP},-->
+    <!--</if>-->
+    <!--</trim>-->
+    <!--</insert>-->
+
+    <!--<update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.ServiceUpdate" >-->
+    <!--update service_update-->
+    <!--<set >-->
+    <!--<if test="serviceId != null" >-->
+    <!--service_id = #{serviceId,jdbcType=INTEGER},-->
+    <!--</if>-->
+    <!--<if test="unixHost != null" >-->
+    <!--unix_host = #{unixHost,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="osUsername != null" >-->
+    <!--os_username = #{osUsername,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="costId != null" >-->
+    <!--cost_id = #{costId,jdbcType=INTEGER},-->
+    <!--</if>-->
+    <!--<if test="serviceCreateDate != null" >-->
+    <!--service_create_date = #{serviceCreateDate,jdbcType=TIMESTAMP},-->
+    <!--</if>-->
+    <!--</set>-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</update>-->
+
+    <!--<update id="updateByPrimaryKey" parameterType="com.barista.entity.ServiceUpdate" >-->
+    <!--update service_update-->
+    <!--set service_id = #{serviceId,jdbcType=INTEGER},-->
+    <!--unix_host = #{unixHost,jdbcType=VARCHAR},-->
+    <!--os_username = #{osUsername,jdbcType=VARCHAR},-->
+    <!--cost_id = #{costId,jdbcType=INTEGER},-->
+    <!--service_create_date = #{serviceCreateDate,jdbcType=TIMESTAMP}-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</update>-->
+</mapper>

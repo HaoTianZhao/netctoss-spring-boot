@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.AdminRoleMapper">
+    <select id="selectAllRoleIdsByAdminId" parameterType="integer" resultType="integer">
+        select role_id
+        from admin_role
+        where admin_id = #{adminId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAdminCountByRoleId" parameterType="integer" resultType="integer">
+        select count(*)
+        from admin_role
+        where role_id = #{roleId, jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertAdminRoles" parameterType="map">
+        insert into admin_role (admin_id, role_id)
+        values
+        <foreach collection="roleIds" item="item" separator=",">
+            (#{adminId,jdbcType=INTEGER}, #{item,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <delete id="deleteByAdminId" parameterType="integer">
+        delete
+        from admin_role
+        where admin_id = #{adminId,jdbcType=INTEGER};
+    </delete>
+
+    <select id="selectCountFilter" parameterType="map" resultType="integer">
+        SELECT
+        count( DISTINCT a.admin_id )
+        FROM
+        admin_info a
+        JOIN admin_role ar
+        JOIN role r
+        JOIN role_privilege rp
+        JOIN privilege p ON a.admin_id = ar.admin_id
+        AND r.role_id = ar.role_id
+        <if test="roleName != null">
+            AND r.role_name LIKE CONCAT( CONCAT( '%', #{roleName, jdbcType=VARCHAR} ), '%' )
+        </if>
+        AND ar.role_id = rp.role_id
+        AND rp.privilege_group_id = p.privilege_group_id
+        <if test="privilegeName != null">
+            and p.privilege_group_name = #{privilegeName, jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectPagingFilter" parameterType="map"
+            resultMap="com.barista.dao.AdminInfoMapper.BaseResultMap">
+        select distinct a.*
+        FROM
+        admin_info a
+        JOIN admin_role ar
+        JOIN role r
+        JOIN role_privilege rp
+        JOIN privilege p ON a.admin_id = ar.admin_id
+        AND r.role_id = ar.role_id
+        <if test="roleName != null">
+            AND r.role_name LIKE CONCAT( CONCAT( '%', #{roleName, jdbcType=VARCHAR} ), '%' )
+        </if>
+        AND ar.role_id = rp.role_id
+        AND rp.privilege_group_id = p.privilege_group_id
+        <if test="privilegeName != null">
+            and p.privilege_group_name = #{privilegeName, jdbcType=VARCHAR}
+        </if>
+        order by a.admin_id limit
+        #{begin, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+    </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.PrivilegeMapper" >
+  <resultMap id="BaseResultMap" type="com.barista.entity.Privilege" >
+    <constructor >
+      <idArg column="privilege_group_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <idArg column="privilege_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="privilege_group_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="privilege_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="privilege_url" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    privilege_group_id, privilege_id, privilege_group_name, privilege_name, privilege_url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from privilege
+    where privilege_group_id = #{privilegeGroupId,jdbcType=INTEGER}
+      and privilege_id = #{privilegeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map" >
+    delete from privilege
+    where privilege_group_id = #{privilegeGroupId,jdbcType=INTEGER}
+      and privilege_id = #{privilegeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.barista.entity.Privilege" >
+    insert into privilege (privilege_group_id, privilege_id, privilege_group_name, 
+      privilege_name, privilege_url)
+    values (#{privilegeGroupId,jdbcType=INTEGER}, #{privilegeId,jdbcType=INTEGER}, #{privilegeGroupName,jdbcType=VARCHAR}, 
+      #{privilegeName,jdbcType=VARCHAR}, #{privilegeUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.barista.entity.Privilege" >
+    insert into privilege
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="privilegeGroupId != null" >
+        privilege_group_id,
+      </if>
+      <if test="privilegeId != null" >
+        privilege_id,
+      </if>
+      <if test="privilegeGroupName != null" >
+        privilege_group_name,
+      </if>
+      <if test="privilegeName != null" >
+        privilege_name,
+      </if>
+      <if test="privilegeUrl != null" >
+        privilege_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="privilegeGroupId != null" >
+        #{privilegeGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="privilegeId != null" >
+        #{privilegeId,jdbcType=INTEGER},
+      </if>
+      <if test="privilegeGroupName != null" >
+        #{privilegeGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="privilegeName != null" >
+        #{privilegeName,jdbcType=VARCHAR},
+      </if>
+      <if test="privilegeUrl != null" >
+        #{privilegeUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.barista.entity.Privilege" >
+    update privilege
+    <set >
+      <if test="privilegeGroupName != null" >
+        privilege_group_name = #{privilegeGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="privilegeName != null" >
+        privilege_name = #{privilegeName,jdbcType=VARCHAR},
+      </if>
+      <if test="privilegeUrl != null" >
+        privilege_url = #{privilegeUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where privilege_group_id = #{privilegeGroupId,jdbcType=INTEGER}
+      and privilege_id = #{privilegeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.barista.entity.Privilege" >
+    update privilege
+    set privilege_group_name = #{privilegeGroupName,jdbcType=VARCHAR},
+      privilege_name = #{privilegeName,jdbcType=VARCHAR},
+      privilege_url = #{privilegeUrl,jdbcType=VARCHAR}
+    where privilege_group_id = #{privilegeGroupId,jdbcType=INTEGER}
+      and privilege_id = #{privilegeId,jdbcType=INTEGER}
+  </update>
+</mapper>

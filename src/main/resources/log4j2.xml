@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF" monitorInterval="1800"><!-- 本身的日志打印级别，和自动刷新配置时间，单位s-->
+    <properties>
+        <property name="LOG_HOME">logs</property>
+        <property name="FILE_NAME">netctoss</property>
+    </properties>
+
+    <Appenders>
+        <!-- 指定控制台输出-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{MM-dd HH:mm:ss.SSS} [%-10t] %-5level %logger{36} : %msg%n"/>
+        </Console>
+
+        <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
+        <File name="log-test" fileName="log-test/test.log" append="false">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %L - %msg%n"/>
+        </File>
+
+        <!-- 定义超过指定数量自动删除旧文件，创建新文件的Appender.-->
+        <!-- filePattern.指定新建日志文件的目录格式.-->
+        <RollingFile name="running-log-info" fileName="${LOG_HOME}/info-${FILE_NAME}.log"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}/info-${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+                     immediateFlush="true">
+
+            <!--只输出level及以上级别的信息(onMatch)，其他的直接拒绝(onMismatch)-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--文件中日志的输出格式-->
+            <PatternLayout
+                pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%logger:%line] - %msg%n"/>
+            <!-- 指定滚动日志的策略，就是什么时候进行新建日志文件输出日志.-->
+            <Policies>
+                <!-- 基于时间的滚动策略，interval属性用来指定多久滚动一次，默认是1 hour。
+                modulate=true属性用来调整时间：比如现在是早上3am，interval是4，那么第一次滚动是在4am，接着是8am，12am...而不是7am.-->
+                <TimeBasedTriggeringPolicy/>
+                <!-- 基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小.-->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+
+            <!-- 用来指定同一个文件夹下最多有几个日志文件时开始删除最旧的，创建新的(通过max属性)。-->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <RollingFile name="running-log-warn" fileName="${LOG_HOME}/warn-${FILE_NAME}.log"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}/info-${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+                     immediateFlush="true">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <RollingFile name="running-log-error" fileName="${LOG_HOME}/error-${FILE_NAME}.log"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}/info-${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+                     immediateFlush="true">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <root level="debug">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="log-test"/>
+            <appender-ref ref="running-log-info"/>
+            <appender-ref ref="running-log-warn"/>
+            <appender-ref ref="running-log-error"/>
+        </root>
+
+        <!-- 单独指定日志级别，过滤掉spring和mybatis的一些无用的DEBUG信息。additivity定义是否只在自定义的Appender中进行输出-->
+        <!--不配置输出源，忽略该日志-->
+        <Logger name="org.hibernate.validator" level="info"/>
+        <Logger name="org.apache.ibatis" level="info"/>
+        <Logger name="io.netty" level="info"/>
+        <Logger name="io.lettuce" level="info"/>
+
+
+        <Logger name="druid.sql" level="info"/>
+        <Logger name="org.springframework" level="info"/>
+        <Logger name="org.mybatis" level="info"/>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,37 @@
+<ul id="menu">
+    <li><a id="index_link" href="/page/index.html" class="index_off"></a></li>
+    <li><a id="role_link" hidden class="privilege2 role_off" href="/page/role/role_list.html"></a></li>
+    <li><a id="admin_list" hidden class="privilege1 admin_off" href="/page/admin/admin_list.html"></a></li>
+    <li><a id="fee_link" hidden class="privilege3 fee_off" href="/page/fee/fee_list.html"></a></li>
+    <li><a id="account_link" hidden class="privilege4 account_off" href="/page/account/account_list.html"></a></li>
+    <li><a id="service_link" hidden class="privilege5 service_off" href="/page/service/service_list.html"></a></li>
+    <li><a id="bill_link" hidden class="privilege6 bill_off" href="/page/bill/bill_list.html"></a></li>
+    <li><a id="report_link" hidden class="privilege7 report_off" href="/page/report/report_list.html"></a></li>
+    <li><a id="information_link" class="information_off" href="/page/user/user_info.html"></a></li>
+    <li><a id="password_link" class="password_off" href="/page/user/user_modi_pwd.html"></a></li>
+</ul>
+<script>
+    $(function () {
+        //权限控制
+        console.log($('#menu a[class^="privilege"]'));
+        $('#menu li:has(a[class^="privilege"])').hide(); 
+        var privileges = sessionStorage.getItem("privileges");
+        console.log(privileges);
+        privileges = privileges.split(',');
+        for (var id of privileges) {
+            $('.privilege' + id).parent().show();
+        }
+
+        //导航图切换
+        var current_page = sessionStorage.getItem("current_page");
+        $('#' + current_page).removeClass(current_page.split('_')[0] + '_off');
+        $('#' + current_page).addClass(current_page.split('_')[0] + '_on');
+
+        console.log($('#' + current_page));
+    });
+
+    $('#menu a').click(function (e) {
+        sessionStorage.setItem("current_page", e.target.id);
+        console.log("e.target.id" + e.target.id);
+    });
+</script>

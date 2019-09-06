@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.AuthorityMapper">
+
+    <select id="selectAll" resultType="string">
+        SELECT p.privilege_url
+        FROM admin_info a
+                 JOIN admin_role ar
+                 JOIN role_privilege rp
+                 JOIN privilege p ON a.admin_code = #{adminCode,jdbcType=VARCHAR}
+            AND a.admin_id = ar.admin_id
+            AND ar.role_id = rp.role_id
+            AND rp.privilege_group_id = p.privilege_group_id
+    </select>
+
+    <select id="selectAllPermission" resultType="string">
+        SELECT p.privilege_url
+        FROM privilege p
+    </select>
+
+    <select id="selectPermissionGroupIds" resultType="integer">
+        SELECT rp.privilege_group_id
+        FROM admin_role ar
+                 JOIN role_privilege rp ON ar.admin_id = #{adminId, jdbcType=INTEGER}
+            AND ar.role_id = rp.role_id
+    </select>
+
+</mapper>

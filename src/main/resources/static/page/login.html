@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NetCTOSS</title>
+    <link type="text/css" rel="stylesheet" media="all" href="styles/global.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="styles/global_color.css" />
+    <script type="text/javascript" src="/page/js/global.js"></script>
+    <script type="text/javascript" src="/page/js/jquery-3.4.1.js"></script>
+
+</head>
+
+<body class="index">
+    <div class="login_box">
+        <table>
+            <form id="login">
+                <tr>
+                    <td class="login_info">账号：</td>
+                    <td colspan="2"><input name="adminCode" id="adminCode" type="text" class="width150" />
+                    </td>
+                    <td hidden id="admin_code_error" class="login_error_info"><span
+                            class="required">30长度的字母、数字和下划线</span></td>
+                </tr>
+                <tr>
+                    <td class="login_info">密码：</td>
+                    <td colspan="2"><input name="adminPassword" id="adminPassword" type="password" class="width150" />
+                    </td>
+                    <td hidden id="admin_password_error"><span class="required">30长度的字母、数字和下划线</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="login_info">验证码：</td>
+                    <td class="width70"><input name="checkCode" id="checkCode" type="text" class="width70" /></td>
+                    <td><img id="check_code_image" src="/images/checkCode" alt="验证码" title="点击更换"
+                            onclick="$('#check_code_image').attr('src','/images/checkCode?v=' + Math.random())" />
+                    </td>
+                    <td hidden id="check_code_error"><span class="required">验证码错误</span></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="login_button" colspan="2">
+                        <a style="cursor:pointer;"><img src="images/login_btn.png" /></a>
+                    </td>
+                    <td hidden id="login_error"><span class="required">用户名或密码错误，请重试</span></td>
+                </tr>
+            </form>
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+
+
+    function checkAdminCode() {
+        if (/^\w{1,30}$/.test($('#adminCode').val())) {
+            $('#admin_code_error').hide();
+            return true;
+        }
+        else {
+            $('#admin_code_error').show();
+            return false;
+        }
+    }
+
+    $("#adminCode").blur(function () {
+        checkAdminCode();
+    });
+
+    function checkAdminPassword() {
+        if (/^\w{1,30}$/.test($('#adminPassword').val())) {
+            $('#admin_password_error').hide();
+            return true;
+        }
+        else {
+            $('#admin_password_error').show();
+            return false;
+        }
+    }
+
+    $("#adminPassword").blur(function () {
+        checkAdminPassword();
+    });
+
+    $('body').bind('keyup', function (event) {
+        console.log(event.keyCode);
+        if (event.keyCode == "13") {
+            $('.login_button img').click();
+        }
+    });
+
+    function checkAll() {
+        $('#login_error').hide();
+        $('#check_code_error').hide();
+        return checkAdminCode() && checkAdminPassword();
+    }
+
+    $(".login_button img").click(function () {
+        if (!checkAll())
+            return;
+        global_post("/login",
+            $('#login').serialize(),
+            function (result) {
+                if (result.code == 200) {
+                    sessionStorage.setItem("current_admin", $('#adminCode').val())
+                    sessionStorage.setItem("privileges", result.data);
+                    sessionStorage.setItem("current_page", "index_link");
+                    localStorage.setItem("token", result.token);
+                    location.href = "index.html?token=" + localStorage.getItem("token");
+                }
+                else if (result.code == 10) {
+                    $('#check_code_error').show();
+                    $('#check_code_image').attr('src', '/images/checkCode?v=' + Math.random())
+                } else if (result.code == 20) {
+                    $('#login_error').show();
+                }
+            });
+    });
+
+
+
+</script>
+
+</html>
