@@ -11,7 +11,7 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -23,9 +23,9 @@ import java.util.Date;
  * @Date 2019/9/7 14:57
  * @Version 1.0
  */
-@Component
+@Service
 @Lazy
-public class QuartzDemo {
+public class QuartzService {
     public void start() {
         try {
             // Quartz 作业：定义一个JobDetail：为Job类设置属性

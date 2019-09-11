@@ -39,4 +39,7 @@ mvnw.cmd
 .mvn/
 
 #个人测试文件
-src/test/java/com/barista/Demo1.java
+src/test/java/com/barista/Demo1.javaTestBean.java
+TestBean.java
+Demo1.java
+JSPController.java

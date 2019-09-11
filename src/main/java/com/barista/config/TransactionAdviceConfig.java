@@ -34,7 +34,7 @@ public class TransactionAdviceConfig {
     private DataSource dataSource;
 
     //自己指定TransactionManager,实际上用spring-boot-jdbc-starter默认就是这个
-    @Bean
+    @Bean(name = "platformTransactionManager")
     public PlatformTransactionManager txManager() {
         return new DataSourceTransactionManager(dataSource);
     }

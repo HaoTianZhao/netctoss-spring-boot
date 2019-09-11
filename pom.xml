@@ -21,10 +21,10 @@
 
     <dependencies>
 
-        <!--不导入默认日志logback-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <!--不导入默认日志logback-->
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -39,7 +39,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--引入jsp所需的两个jar包-->
+        <!--引入jsp支持所需的两个jar包-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -133,12 +133,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
-        <!-- quartz事务依赖，jta -->
-        <!--<dependency>-->
-            <!--<groupId>javax.transaction</groupId>-->
-            <!--<artifactId>jta</artifactId>-->
-            <!--<version>1.1</version>-->
-        <!--</dependency>-->
 
         <!-- commons-lang3 -->
         <dependency>

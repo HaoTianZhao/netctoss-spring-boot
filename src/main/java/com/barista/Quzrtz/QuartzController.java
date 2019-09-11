@@ -1,6 +1,4 @@
-package com.barista.controller;
-
-import com.barista.Quzrtz.QuartzDemo;
+package com.barista.Quzrtz;
 
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date 2019/9/9 15:10
  * @Version 1.0
  */
-@Controller()
+@Controller
 @RequestMapping("/test")
-public class TestController {
+public class QuartzController {
 
     @Autowired
-    private QuartzDemo quartzDemo;
+    private QuartzService quartzService;
 
 
     @RequestMapping("/quartz")
     public void quartz() throws JobExecutionException {
-        quartzDemo.start();
+        quartzService.start();
 
 
     }
