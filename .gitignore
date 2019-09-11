@@ -1,4 +1,4 @@
-# Compiled class file
+﻿# Compiled class file
 *.class
 
 # Log file
@@ -38,5 +38,6 @@ mvnw
 mvnw.cmd
 .mvn/
 
-#个人测试信息
+
+#个人测试文件
 src/test/java/com/barista/Demo1.java
