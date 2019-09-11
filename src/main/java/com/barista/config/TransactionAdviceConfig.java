@@ -7,11 +7,14 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
+
+import javax.sql.DataSource;
 
 /**
  * service层全局事务
@@ -28,12 +31,19 @@ public class TransactionAdviceConfig {
     private static final String AOP_POINTCUT_EXPRESSION = "execution(* com..*.service..*.*(..))";
 
     @Autowired
-    private PlatformTransactionManager transactionManager;//数据源，也就是target
+    private DataSource dataSource;
+
+    //自己指定TransactionManager,实际上用spring-boot-jdbc-starter默认就是这个
+    @Bean
+    public PlatformTransactionManager txManager() {
+        return new DataSourceTransactionManager(dataSource);
+    }
 
     @Bean
     public TransactionInterceptor txAdvice() {
 
         DefaultTransactionAttribute txAttr_REQUIRED = new DefaultTransactionAttribute();
+        txAttr_REQUIRED.setIsolationLevel(TransactionDefinition.ISOLATION_DEFAULT);
         txAttr_REQUIRED.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
         DefaultTransactionAttribute txAttr_REQUIRED_READONLY = new DefaultTransactionAttribute();   //事务属性
@@ -56,7 +66,9 @@ public class TransactionAdviceConfig {
         source.addTransactionalMethod("list*", txAttr_REQUIRED_READONLY);
         source.addTransactionalMethod("count*", txAttr_REQUIRED_READONLY);
         source.addTransactionalMethod("is*", txAttr_REQUIRED_READONLY);
-        return new TransactionInterceptor(transactionManager, source);                              //将数据源和匹配源作为advice
+
+        source.addTransactionalMethod("*", txAttr_REQUIRED);
+        return new TransactionInterceptor(txManager(), source);                              //将数据源和匹配源作为advice
     }
 
     @Bean
