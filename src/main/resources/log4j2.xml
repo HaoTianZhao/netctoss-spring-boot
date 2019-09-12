@@ -26,7 +26,7 @@
         <!--info以上级别-->
         <RollingFile name="running-log-info"
                      fileName="${LOG_HOME}/${date:yyyy-MM}-${date:dd}/info-${FILE_NAME}-${date:HH-mm}.log"
-                     filePattern="${LOG_HOME}/${date:yyyy-MM}-${date:dd}/info-${FILE_NAME}-%i.log.gz"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}-%d{dd}/info-${FILE_NAME}-%i.log.gz"
                      immediateFlush="true">
 
             <!--只输出level及以上级别的信息(onMatch)，其他的直接拒绝(onMismatch)-->
@@ -46,10 +46,11 @@
             <!-- 用来指定同一个文件夹下最多有几个日志文件时开始删除最旧的，创建新的(通过max属性)。-->
             <DefaultRolloverStrategy max="20"/>
         </RollingFile>
+
         <!--warn级别-->
         <RollingFile name="running-log-warn"
                      fileName="${LOG_HOME}/${date:yyyy-MM}-${date:dd}/warn-${FILE_NAME}-${date:HH-mm}.log"
-                     filePattern="${LOG_HOME}/${date:yyyy-MM}-${date:dd}/warn-${FILE_NAME}-%i.log.gz"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}-%d{dd}/warn-${FILE_NAME}-%i.log.gz"
                      immediateFlush="true">
             <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout
@@ -64,7 +65,7 @@
         <!--error级别-->
         <RollingFile name="running-log-error"
                      fileName="${LOG_HOME}/${date:yyyy-MM}-${date:dd}/error-${FILE_NAME}-${date:HH-mm}.log"
-                     filePattern="${LOG_HOME}/${date:yyyy-MM}-${date:dd}/error-${FILE_NAME}-%i.log.gz"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}-%d{dd}/error-${FILE_NAME}-%i.log.gz"
                      immediateFlush="true">
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout
@@ -93,9 +94,13 @@
         <Logger name="io.netty" level="info"/>
         <Logger name="io.lettuce" level="info"/>
 
-
         <Logger name="druid.sql" level="info"/>
-        <Logger name="org.springframework" level="info"/>
+        <Logger name="org.springframework.security" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.springframework" level="info"  additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Logger name="org.mybatis" level="info"/>
     </Loggers>
 </Configuration>
