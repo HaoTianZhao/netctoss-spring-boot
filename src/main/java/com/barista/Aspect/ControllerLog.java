@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ControllerLog {
     private Logger logger = LoggerFactory.getLogger(ControllerLog.class);
 
-    @Pointcut("execution(* com.barista.controller..*.*(..))")
+    @Pointcut("execution(* com.barista..*Controller.*(..))")
     public void controllerAspect() {
     }
 
