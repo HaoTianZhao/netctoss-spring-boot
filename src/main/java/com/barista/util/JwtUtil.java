@@ -65,6 +65,12 @@ public class JwtUtil {
         }
     }
 
+    public String getChaimSubject(String token) {
+        Claims claim = getClaimByToken(token);
+        String userName = claim.getSubject();
+        return userName;
+    }
+
     /**
      * token是否过期
      *

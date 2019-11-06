@@ -45,12 +45,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if (StringUtils.isEmpty(token)) {
             token = request.getParameter(jwtUtil.getHeader());
         }
-        if (StringUtils.isEmpty(token)) {
-            token = (String) request.getSession().getAttribute(LoginInterceptor.USER_KEY);
-        }
+
         Claims claim;
+        String userName = null;
+        if (StringUtils.isEmpty(token)) {
+            userName = (String) request.getSession().getAttribute(LoginInterceptor.USER_KEY);
+        }else{
+            claim = jwtUtil.getClaimByToken(token);
+            userName = claim.getSubject();
+        }
+
         //用户未登录
-        if (StringUtils.isEmpty(token) || (claim = jwtUtil.getClaimByToken(token)) == null) {
+        if (StringUtils.isEmpty(userName)) {
             logger.debug("未登录，不可以访问" + request.getRequestURL());
             //这是访问页面时的重定向
             if (request.getRequestURL().toString().contains(".html")) {
@@ -63,8 +69,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
             return false;
         }
-        String userName = claim.getSubject();
         request.setAttribute(USER_KEY, userName);
+        request.getSession().setAttribute(USER_KEY, userName);
         return true;
     }
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.barista.dao.TestDao">
+    <resultMap id="BaseResultMap" type="com.barista.entity.Test">
+
+        <!--<constructor>-->
+            <!--<idArg column="admin_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>-->
+            <!--<arg column="adminRole" jdbcType="INTEGER" javaType="java.lang.Integer"/>-->
+            <!--<arg column="admin_code" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+            <!--<arg column="admin_password" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+            <!--<arg column="admin_name" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+            <!--<arg column="admin_telephone" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+            <!--<arg column="admin_email" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+            <!--<arg column="admin_enrolldate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>-->
+        <!--</constructor>-->
+
+        <id property="adminId" column="admin_id"/>
+        <result property="adminCode" column="admin_code"/>
+        <!--<result property="adminRole" column="role_id"/>-->
+        <result property="adminAdminPassword" column="admin_password"/>
+        <result property="adminName" column="admin_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="adminTelephone" column="admin_telephone" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="adminEmail" column="admin_email" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="adminEnrolldate" column="admin_enrolldate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+
+        <association property="adminRole" resultMap="adminRoleMap"/>
+
+    </resultMap>
+    <resultMap id="adminRoleMap" type="com.barista.entity.MyInteger">
+        <result column="role_id" property="adminRole"/>
+    </resultMap>
+
+    <select id="selectOne" parameterType="int" resultMap="BaseResultMap">
+        select i.*, r.role_id
+        from admin_info i
+                  join admin_role r on i.admin_id = r.admin_id
+        where i.admin_id = '1002'
+    </select>
+</mapper>

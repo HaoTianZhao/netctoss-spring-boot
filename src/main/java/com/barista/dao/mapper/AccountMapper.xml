@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.barista.dao.AccountMapper">
+  <resultMap id="BaseResultMap" type="com.barista.entity.Account">
+    <id column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="account_recommender_id" jdbcType="INTEGER" property="accountRecommenderId" />
+    <result column="account_login_name" jdbcType="VARCHAR" property="accountLoginName" />
+    <result column="account_login_passwd" jdbcType="VARCHAR" property="accountLoginPasswd" />
+    <result column="account_status" jdbcType="CHAR" property="accountStatus" />
+    <result column="account_create_date" jdbcType="TIMESTAMP" property="accountCreateDate" />
+    <result column="account_pause_date" jdbcType="TIMESTAMP" property="accountPauseDate" />
+    <result column="account_close_date" jdbcType="TIMESTAMP" property="accountCloseDate" />
+    <result column="account_real_name" jdbcType="VARCHAR" property="accountRealName" />
+    <result column="account_idcard_no" jdbcType="CHAR" property="accountIdcardNo" />
+    <result column="account_birthdate" jdbcType="TIMESTAMP" property="accountBirthdate" />
+    <result column="account_gender" jdbcType="CHAR" property="accountGender" />
+    <result column="account_occupation" jdbcType="VARCHAR" property="accountOccupation" />
+    <result column="account_telephone" jdbcType="VARCHAR" property="accountTelephone" />
+    <result column="account_email" jdbcType="VARCHAR" property="accountEmail" />
+    <result column="account_mail_address" jdbcType="VARCHAR" property="accountMailAddress" />
+    <result column="account_zipcode" jdbcType="CHAR" property="accountZipcode" />
+    <result column="account_qq" jdbcType="VARCHAR" property="accountQq" />
+    <result column="account_last_login_time" jdbcType="TIMESTAMP" property="accountLastLoginTime" />
+    <result column="account_last_login_ip" jdbcType="VARCHAR" property="accountLastLoginIp" />
+  </resultMap>
+</mapper>

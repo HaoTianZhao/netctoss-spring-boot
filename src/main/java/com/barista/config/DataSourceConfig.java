@@ -4,12 +4,17 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 
+import org.apache.ibatis.session.AutoMappingBehavior;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
 
@@ -30,6 +35,40 @@ public class DataSourceConfig {
     public DataSource druidDataSource() {
         DruidDataSource datasource = new DruidDataSource();
         return datasource;
+    }
+
+    @Value("${mybatis.type-aliases-package}")
+    private String typeAliasesPackage;
+
+    @Value("${mybatis.mapper-locations}")
+    private String mapperLocations;
+
+    @Bean
+    public SqlSessionFactory mybatis(DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+
+        //设置数据源
+        sqlSessionFactoryBean.setDataSource(dataSource);
+
+        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        //设置实体类的位置
+        sqlSessionFactoryBean.setTypeAliasesPackage(typeAliasesPackage);
+
+        //读配置文件中的mapper位置,并配置进去
+        sqlSessionFactoryBean.setMapperLocations(resourcePatternResolver.getResources(mapperLocations));
+
+        //1.mybatis配置类,如果使用tk.mybatis.mapper,要改成tk开头的Configuration:
+        //        tk.apache.ibatis.session.Configuration configuration;
+        //2.设置MapperHelper:
+        //        configuration.setMapperHelper(new MapperHelper());
+        //3.解决查询返回Map时设置值为null的字段没有在结果集中
+        //        configuration.setCallSettersOnNulls(true);
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setAutoMappingBehavior(AutoMappingBehavior.FULL);//配置所有resultMap为autoMapping,自动映射复杂类型
+        configuration.setMapUnderscoreToCamelCase(true);//开启下划线和驼峰风格的转换
+        sqlSessionFactoryBean.setConfiguration(configuration);
+
+        return sqlSessionFactoryBean.getObject();
     }
 
     @Bean

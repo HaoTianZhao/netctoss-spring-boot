@@ -52,7 +52,7 @@ public class QuartzService {
                     .withSchedule(SimpleScheduleBuilder.simpleSchedule()
                             // .withMisfireHandlingInstructionNextWithRemainingCount()//8次
                             .withMisfireHandlingInstructionNextWithExistingCount()//8次，应该是11次
-                            // .withMisfireHandlingInstructionNowWithExistingCount()//11次
+                            .withMisfireHandlingInstructionNowWithExistingCount()//11次
                             .withIntervalInSeconds(2) // 每隔一秒执行一次
                             .withRepeatCount(10) // 执行第1次后再执行10次
                             .repeatForever()) // 一直执行，奔腾到老不停歇
@@ -69,6 +69,7 @@ public class QuartzService {
                             // Cron表达式：[秒][分][时][日][月][周][年] (周日为1-周六为7，年可不写)
                             // *每 ?不关心 -至 #第 /递增 ,和 L最后 W最近工作日，[日专用]LW最后工作日，[周专用]#当月第几周
                             CronScheduleBuilder.cronSchedule("0/1 * * * * ? * ")
+                                    .withMisfireHandlingInstructionIgnoreMisfires()
                                     .withMisfireHandlingInstructionFireAndProceed()
                     )
                     .build();

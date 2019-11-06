@@ -4,7 +4,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
@@ -14,10 +13,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,7 +45,7 @@ public class ControllerLog {
         logger.info("请求访问方法:[{}]", targetMethodName);
 
         //获取request中携带的信息
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         String ip = request.getRemoteAddr();
         String url = request.getRequestURL().toString();
@@ -67,7 +64,6 @@ public class ControllerLog {
             builder.deleteCharAt(builder.length() - 1);
         }
         logger.info("参数:[{}]", builder.toString());
-
         //调用目标方法并返回它的结果
         return joinPoint.proceed();
     }

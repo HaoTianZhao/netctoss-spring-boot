@@ -21,6 +21,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import static com.barista.interceptor.AuthorityInterceptor.AUTH_KEY;
+import static com.barista.interceptor.LoginInterceptor.USER_KEY;
+
 /**
  * 登录和退出登录
  *
@@ -67,7 +70,7 @@ public class LoginController {
             String token = jwtUtil.generateToken(admin.getAdminCode());
             List<Integer> adminPrivileges = authorityService.selectPermissionGroupIds(dbAdmin.getAdminId());
             Set<Integer> set = new HashSet<>(adminPrivileges);
-            session.setAttribute(LoginInterceptor.USER_KEY, token);
+            session.setAttribute(USER_KEY, token);
             return Result.success(set, token);
         } else {
             return Result.fail(ResultCode.PASSWORD_ERROR);
@@ -77,6 +80,8 @@ public class LoginController {
 
     @RequestMapping("logout")
     public Result logout(HttpSession session) {
+        String userName = (String) session.getAttribute(USER_KEY);
+        redisUtil.del(AUTH_KEY + userName);
         session.removeAttribute("token");
         return Result.success("退出登录成功");
     }

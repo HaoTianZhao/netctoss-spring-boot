@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <!-- defaultModelType="flat" 设置复合主键时不单独为主键创建实体 -->
+    <context id="MySql" defaultModelType="flat">
+        <!--前后生成反引号-->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 生成的POJO实现java.io.Serializable接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+        <!--注释-->
+        <commentGenerator>
+            <property name="trimStrings" value="true"/>
+            <!-- 注释里不添加日期 -->
+            <property name="suppressDate" value="true"/>
+            <!-- 不去除注释时,注释中会有@mbggenerated注解,有该注解的部分会在插件重新运行时先删除,防止mapper中出现追加情况 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+            <!-- 将数据库中表的字段描述信息添加到注释 -->
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库连接 -->
+        <jdbcConnection
+            driverClass="com.mysql.cj.jdbc.Driver"
+            connectionURL="jdbc:mysql://localhost:3306/netctoss?serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8
+&amp;useSSL=false&amp;nullNamePatternMatchesAll=true&amp;nullCatalogMeansCurrent=true"
+            userId="root"
+            password="123456"/>
+
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!-- 生成POJO对象，并将类放到com.barista.entity包下 -->
+        <javaModelGenerator targetPackage="com.barista.entity"
+                            targetProject="src/main/java">
+            <!-- (会影响mapper的resultMap标签.从id,result形式,变为constructor,arg形式) 是否对model添加 构造函数 -->
+            <property name="constructorBased" value="false"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapper xml文件，并放到resources下的mapper文件夹下 -->
+        <sqlMapGenerator targetPackage="com.barista.dao.mapper"
+                         targetProject="src/main/java"></sqlMapGenerator>
+
+        <!-- 生成mapper xml对应dao接口，放到com.barista.dao-->
+        <!-- type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象
+             type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
+             type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
+        -->
+        <javaClientGenerator targetPackage="com.barista.dao" targetProject="src/main/java"
+                             type="XMLMAPPER"></javaClientGenerator>
+
+        <!--table标签可以有多个，至少一个，tableName指定表名，可以使用_和%通配符, tableName="%"生成所有表-->
+        <table tableName="account" domainObjectName="Account"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false">
+            <!--是否只生成POJO对象-->
+            <property name="modelOnly" value="true"/>
+
+            <!--将时间转换为LocalDateTime-->
+            <!--<columnOverride column="birthday" property="birthday"-->
+            <!--typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"-->
+            <!--jdbcType="OTHER" javaType="java.time.LocalDateTime"/>-->
+        </table>
+
+        <!--
+                <table tableName="admin_info" domainObjectName="AdminInfo"
+                       enableCountByExample="false" enableUpdateByExample="false"
+                       enableDeleteByExample="false"
+                       enableSelectByExample="false" selectByExampleQueryId="false">
+                    <property name="modelOnly" value="false"/>
+                    &lt;!&ndash; 这个用于不自增时查询最后的id(好像oracle才需要) &ndash;&gt;
+                    &lt;!&ndash; <generatedKey column="admin_id" sqlStatement="select LAST_INSERT_ID() from tablename"/> &ndash;&gt;
+                </table>
+        -->
+
+    </context>
+</generatorConfiguration>

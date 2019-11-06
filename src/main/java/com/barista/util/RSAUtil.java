@@ -1,13 +1,17 @@
 package com.barista.util;
 
-import javax.crypto.Cipher;
-
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+
+import javax.crypto.Cipher;
 
 /**
  * RSA
@@ -18,13 +22,14 @@ import java.util.Base64;
  * @Version 1.0
  */
 public class RSAUtil {
-    public static final String src = "rsa test";
+    public static final String src = "rsa test被测试字符串";
 
     public static void main(String[] args) {
         jdkRSA();
     }
 
     // jdk实现：
+    @SuppressWarnings("all")
     public static void jdkRSA() {
         try {
             // 1.生成公钥和私钥
